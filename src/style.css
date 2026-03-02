@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+@theme {
+    --font-pixel: "Press Start 2P", cursive;
+    --font-dialog: "VT323", monospace;
+    --font-modern-pixel: "Pixelify", sans-setif;
+    --font-silkscreen: "Silkscreen", cursie;
+}

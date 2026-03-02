@@ -7,26 +7,26 @@
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "type-check": "vue-tsc --noEmit",  
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix",  
-    "format": "prettier --write src/" 
+    "type-check": "vue-tsc --noEmit",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix",
+    "format": "prettier --write src/"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
+    "@vueuse/core": "^13.1.0",
+    "axios": "^1.8.4",
+    "pinia": "^3.0.2",
     "tailwindcss": "^4.1.18",
     "vue": "^3.5.25",
-    "vue-router": "^4.5.0",        
-    "pinia": "^3.0.2",              
-    "axios": "^1.8.4",              
-    "@vueuse/core": "^13.1.0"       
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
     "@vitejs/plugin-vue": "^6.0.2",
     "@vue/tsconfig": "^0.8.1",
+    "prettier": "^3.5.3",
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
-    "vue-tsc": "^3.1.5",
-    "prettier": "^3.5.3"
+    "vue-tsc": "^3.1.5"
   }
 }

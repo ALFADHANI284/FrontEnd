@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import Navbar from './components/Navbar.vue'
 </script>
 
 <template>
-  <div class="bg-blue-500 text-white p-10 text-center text-3xl font-bold h-screen">
-    Test Tailwind
-  </div>
+  <Navbar />
+  <router-view></router-view>
 </template>
