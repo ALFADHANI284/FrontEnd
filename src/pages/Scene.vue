@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { storyData } from '../data/storyData'
+import DialogBox from '../components/DialogBox.vue' 
 
 // State untuk melacak scene mana yang sedang aktif. Dimulai dari 'scene_1'
 const currentSceneId = ref('scene_1')
@@ -19,36 +20,37 @@ const goToScene = (nextId: string | undefined) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-900 flex flex-col items-center justify-end pb-12 p-4">
+  <div class="min-h-screen bg-[#2C3E50] flex flex-col items-center justify-center p-4">
     
-    <div v-if="currentScene" class="bg-black border-4 border-white p-6 max-w-3xl w-full text-white shadow-[8px_8px_0_0_rgba(16,185,129,1)]">
+    <div v-if="currentScene" class="w-full max-w-4xl flex flex-col gap-6">
       
-      <p class="text-yellow-400 font-pixel text-sm mb-4">
-        >> {{ currentScene.speaker }}
-      </p>
+      <DialogBox 
+        :characterName="currentScene.speaker" 
+        :dialogueText="currentScene.text" 
+      />
 
-      <p class="font-dialog text-3xl mb-8 leading-relaxed">
-        {{ currentScene.text }}
-      </p>
+      <div class="flex flex-col gap-3 px-12 md:px-20"> 
+        
+        <div v-if="currentScene.choices" class="flex flex-col gap-3">
+          <button
+            v-for="(choice, index) in currentScene.choices"
+            :key="index"
+            @click="goToScene(choice.nextScene)"
+            class="bg-[#E6DCC8] hover:bg-[#D3C5AE] text-black border-[3px] border-black p-4 text-left font-mono text-lg transition-all shadow-[4px_4px_0px_rgba(0,0,0,1)] active:translate-y-1 active:shadow-none cursor-pointer"
+          >
+            > {{ choice.text }}
+          </button>
+        </div>
 
-      <div v-if="currentScene.choices" class="flex flex-col gap-3">
-        <button
-          v-for="(choice, index) in currentScene.choices"
-          :key="index"
-          @click="goToScene(choice.nextScene)"
-          class="bg-gray-800 hover:bg-emerald-600 hover:text-black border-2 border-gray-500 p-3 text-left font-pixel text-xs transition-colors"
-        >
-          > {{ choice.text }}
-        </button>
-      </div>
+        <div v-else-if="currentScene.next" class="flex justify-end mt-4">
+          <button
+            @click="goToScene(currentScene.next)"
+            class="bg-[#D3C5AE] hover:bg-[#C2B299] text-black px-8 py-3 font-mono text-xl border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] active:translate-y-1 active:shadow-none transition-all cursor-pointer font-bold"
+          >
+            LANJUT ▼
+          </button>
+        </div>
 
-      <div v-else-if="currentScene.next" class="flex justify-end">
-        <button
-          @click="goToScene(currentScene.next)"
-          class="bg-emerald-500 hover:bg-emerald-400 text-black px-6 py-2 font-pixel text-sm border-2 border-emerald-200"
-        >
-          LANJUT ▼
-        </button>
       </div>
 
     </div>
