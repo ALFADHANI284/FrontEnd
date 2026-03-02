@@ -1,8 +1,12 @@
 @import "tailwindcss";
-
 @theme {
+    /* fonts */
     --font-pixel: "Press Start 2P", cursive;
     --font-dialog: "VT323", monospace;
     --font-modern-pixel: "Pixelify", sans-setif;
     --font-silkscreen: "Silkscreen", cursie;
+    /* colors */
+    --color-primary: #E6DCC8;
+    --color-secondary: #2C3E50;
+    --color-accent: #2C3E50;
 }

@@ -1,36 +1,36 @@
 <script setup lang="ts">
-// Footer dengan tema gelap agar menyatu dengan gambar hook
+// Footer dengan tema gelap retro (menggunakan warna secondary)
 </script>
 
 <template>
-  <footer class="bg-slate-900/95 border-t-4 border-emerald-500 text-gray-100 pt-10 pb-6 px-8 mt-auto backdrop-blur-sm shadow-[0_-5px_15px_rgba(0,0,0,0.5)] relative z-20">
+  <footer class="bg-secondary border-t-[4px] border-black text-primary pt-10 pb-6 px-8 mt-auto relative z-20">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
       
       <div class="flex flex-col items-center md:items-start text-center md:text-left">
-        <router-link to="/" class="font-pixel text-2xl tracking-wider text-white hover:text-emerald-400 transition-colors drop-shadow-md">
+        <router-link to="/" class="font-pixel text-2xl tracking-wider text-primary hover:text-accent transition-none">
           FUNDIVEST
         </router-link>
-        <p class="font-dialog text-xl mt-2 text-gray-300">
-          Level up your portfolio!
+        <p class="font-main text-xl mt-2 text-primary font-bold opacity-80">
+          Lorem Ipsum 
         </p>
       </div>
 
-      <div class="flex flex-wrap justify-center gap-6 font-dialog text-2xl text-gray-300">
-        <a href="#" class="hover:underline hover:text-emerald-400 transition-colors">About Us</a>
-        <a href="#" class="hover:underline hover:text-emerald-400 transition-colors">Terms</a>
-        <a href="#" class="hover:underline hover:text-emerald-400 transition-colors">Privacy</a>
+      <div class="flex flex-wrap justify-center gap-6 font-main font-bold text-2xl">
+        <a href="#" class="text-primary hover:text-accent hover:underline decoration-[3px] underline-offset-4 transition-none">About Us</a>
+        <a href="#" class="text-primary hover:text-accent hover:underline decoration-[3px] underline-offset-4 transition-none">Terms</a>
+        <a href="#" class="text-primary hover:text-accent hover:underline decoration-[3px] underline-offset-4 transition-none">Privacy</a>
       </div>
 
       <div>
-        <button class="font-pixel bg-black text-white hover:bg-emerald-500 hover:text-black px-6 py-3 text-sm border-2 border-white hover:border-black shadow-[4px_4px_0_0_rgba(16,185,129,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0)] hover:translate-y-1 transition-all">
-          JOIN DISCORD
+        <button class="font-pixel bg-primary text-black hover:bg-[#D3C5AE] px-6 py-3 text-sm border-[3px] border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] active:translate-y-1 active:shadow-none transition-none cursor-pointer">
+          LOREM IPSUM
         </button>
       </div>
 
     </div>
     
-    <div class="max-w-7xl mx-auto mt-8 pt-4 border-t-2 border-dashed border-gray-600 text-center">
-      <p class="font-pixel text-[10px] text-gray-400 tracking-widest w-full">
+    <div class="max-w-7xl mx-auto mt-8 pt-4 border-t-[4px] border-dashed border-primary text-center opacity-80">
+      <p class="font-pixel text-[10px] text-primary tracking-widest w-full mt-2">
         © 2026 FUNDIVEST. ALL RIGHTS RESERVED.
       </p>
     </div>
