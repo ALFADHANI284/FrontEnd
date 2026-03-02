@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../pages/TitleScreen.vue'
+// Ubah import dari TitleScreen.vue menjadi Home.vue
+import Home from '../pages/Home.vue' 
 import Game from '../pages/Scene.vue'
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -16,4 +18,5 @@ const router = createRouter({
     }
   ]
 })
+
 export default router
