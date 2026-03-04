@@ -10,3 +10,30 @@
     --color-secondary: #2C3E50;
     --color-accent: #2C3E50;
 }
+* {
+  scrollbar-width: auto;
+  scrollbar-color: var(--color-secondary) var(--color-primary);
+}
+
+/* 2. Untuk Chrome, Edge, Safari, dan Opera */
+::-webkit-scrollbar {
+  width: 16px; 
+}
+
+/* Jalur belakang scrollbar */
+::-webkit-scrollbar-track {
+  background: var(--color-primary);
+  border-left: 4px solid black; 
+}
+
+/* Kotak scrollbar yang bisa ditarik */
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-secondary);
+  border: 3px solid black; 
+  border-right: none; 
+}
+
+/* Efek saat kotak scrollbar di-hover atau ditarik */
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-accent); 
+}
