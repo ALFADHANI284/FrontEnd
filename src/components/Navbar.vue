@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import AOS from 'aos'
-import 'aos/dist/aos.css' // WAJIB ADA agar animasi muncul
+import 'aos/dist/aos.css'
 
-const isMobileMenuOpen = ref(false)
 const isVisible = ref(true)
 const lastScrollPosition = ref(0)
 const isAtTop = ref(true)
@@ -19,7 +18,6 @@ const handleScroll = () => {
     isVisible.value = true
   } else {
     isVisible.value = false
-    isMobileMenuOpen.value = false
   }
   lastScrollPosition.value = currentScrollPosition
 }
@@ -27,7 +25,7 @@ const handleScroll = () => {
 onMounted(() => {
   AOS.init({
     once: true,
-    duration: 800
+    duration: 600
   })
   window.addEventListener('scroll', handleScroll, { passive: true })
 })
@@ -40,38 +38,37 @@ onUnmounted(() => {
 <template>
   <header class="relative">
     <nav :class="[
-      'fixed top-0 left-0 right-0 z-[100] flex items-stretch justify-between h-20 text-black',
-      'border-b-[3px] border-black bg-primary',
-      'transition-all duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] will-change-transform',
-
+      'fixed top-0 left-0 right-0 z-[100] flex items-stretch justify-between h-20 text-accent',
+      'border-b-[4px] border-accent bg-primary transition-all duration-500 ease-in-out',
+      
       // Logic translasi saat scroll
-      isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0',
-
-      // Shadow dinamis
-      isAtTop ? 'shadow-none' : 'shadow-[0_4px_0_0_rgba(0,0,0,1)]'
+      isVisible ? 'translate-y-0' : '-translate-y-full',
     ]">
-      <div class="flex items-center gap-10 pl-8">
-        <router-link to="/" data-aos="fade-right" data-aos-delay="200"
-          class="font-pixel text-2xl tracking-widest hover:text-accent transition-all duration-300">
+      
+      <div class="flex items-center gap-12 pl-8">
+        <router-link to="/" 
+          class="font-pixel text-2xl tracking-tighter hover:skew-x-[-10deg] transition-transform duration-200">
           FUNDIVEST
         </router-link>
 
-        <div class="hidden md:flex gap-8 font-main text-2xl mt-2 font-bold">
-          <a href="#" data-aos="fade-down" data-aos-delay="400"
-            class="relative group hover:text-accent transition-colors">How To Play</a>
-          <a href="#" data-aos="fade-down" data-aos-delay="500"
-            class="relative group hover:text-accent transition-colors">Catalog</a>
-          <a href="#" data-aos="fade-down" data-aos-delay="600"
-            class="relative group hover:text-accent transition-colors">Blog</a>
+        <div class="hidden md:flex items-center h-full font-main text-xl font-black uppercase tracking-tight">
+          <a href="#" class="h-full flex items-center px-6 hover:bg-accent hover:text-primary transition-colors border-x-[0px] hover:border-x-[4px] border-accent">
+            How To Play
+          </a>
+          <a href="#" class="h-full flex items-center px-6 hover:bg-accent hover:text-primary transition-colors border-x-[0px] hover:border-x-[4px] border-accent">
+            Catalog
+          </a>
+          <a href="#" class="h-full flex items-center px-6 hover:bg-accent hover:text-primary transition-colors border-x-[0px] hover:border-x-[4px] border-accent">
+            Blog
+          </a>
         </div>
       </div>
 
-      <div class="hidden md:flex items-center gap-6 pr-8">
-        <button data-aos="fade-left" data-aos-delay="700"
-          class="font-main font-bold text-2xl hover:text-accent px-4 py-2">Login</button>
-        <button data-aos="fade-left" data-aos-delay="800"
-          class="font-pixel text-xs bg-accent text-primary px-6 py-3 border-[3px] border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)] active:translate-y-1 active:shadow-none transition-all">
-          SIGN UP
+      <div class="md:hidden flex items-center pr-8">
+        <button class="p-2 border-[3px] border-accent bg-accent text-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="square" stroke-linejoin="round" stroke-width="3" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
         </button>
       </div>
     </nav>
@@ -79,9 +76,15 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* Opsional: Memastikan pergerakan font tidak blur saat animasi */
 nav {
-  backface-visibility: hidden;
-  -webkit-font-smoothing: subpixel-antialiased;
+  /* Memastikan font tetap tajam saat translasi */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Animasi link saat hover agar ada efek blok */
+a {
+  cursor: pointer;
+  position: relative;
 }
 </style>
