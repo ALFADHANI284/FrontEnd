@@ -115,9 +115,9 @@ const flags = [
       </div>
     </section> -->
 
-    <section class="w-full border-t-[4px] border-accent">
+    <!-- <section class="w-full border-t-[4px] border-accent">
       <img src="/hook.png" alt="hook image" class="w-full h-auto object-cover contrast-125" />
-    </section>
+    </section> -->
 
   </div>
 </template>

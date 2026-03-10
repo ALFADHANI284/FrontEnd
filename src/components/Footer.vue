@@ -8,30 +8,22 @@ const isVisible = ref(false)
 let observer: IntersectionObserver | null = null
 
 onMounted(() => {
-  // 1. Inisialisasi AOS global (jika belum di main.ts)
   AOS.init({
     once: true,
-    duration: 800,
+    duration: 600,
   })
 
-  // 2. Gunakan Intersection Observer untuk memantau Footer
   observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      // Jika footer masuk layar lebih dari 10%
       if (entry.isIntersecting) {
         isVisible.value = true
-        
-        // Refresh AOS untuk menghitung ulang koordinat saat ini
-        AOS.refresh()
-        
-        // Berhenti mengamati setelah terlihat (karena once: true)
+        setTimeout(() => { AOS.refresh() }, 50)
         if (footerRef.value) observer?.unobserve(footerRef.value)
       }
     })
   }, {
-    // Threshold: 0.2 berarti 20% footer harus masuk layar dulu baru animasi jalan
-    threshold: 0.2,
-    rootMargin: '0px 0px -50px 0px' // Offset manual 50px dari bawah
+    threshold: 0.1,
+    rootMargin: '0px 0px 0px 0px'
   })
 
   if (footerRef.value) {
@@ -48,58 +40,47 @@ onUnmounted(() => {
   <footer 
     ref="footerRef"
     id="site-footer"
-    class="bg-secondary border-t-[4px] border-black text-primary pt-10 pb-6 px-8 mt-auto relative z-20 overflow-hidden"
+    class="bg-primary border-t-[8px] border-accent text-accent pt-32 pb-12 px-6 mt-auto overflow-hidden relative"
   >
-    <div v-if="isVisible" class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+    <div class="absolute top-10 left-10 w-4 h-4 bg-accent hidden md:block"></div>
+    <div class="absolute top-10 right-10 w-4 h-4 bg-accent hidden md:block"></div>
+
+    <div v-if="isVisible" class="max-w-4xl mx-auto flex flex-col items-center text-center gap-12">
+      
+      <div class="flex flex-col items-center gap-6" data-aos="zoom-in">
+        <h2 class="font-pixel text-5xl md:text-7xl lg:text-8xl tracking-tighter uppercase leading-none">
+          FUNDIVEST
+        </h2>
+        <div class="font-main font-black text-xl md:text-3xl uppercase tracking-widest border-[4px] border-accent px-8 py-3 bg-white shadow-[8px_8px_0_0_#2C3E50] rotate-[-2deg] mt-2">
+          Protect Your Assets
+        </div>
+      </div>
 
       <div 
-        class="flex flex-col items-center md:items-start text-center md:text-left"
-        data-aos="fade-right"
-        data-aos-anchor="#site-footer"
+        class="flex flex-wrap justify-center items-center gap-6 md:gap-12 font-main font-black text-xl md:text-2xl uppercase tracking-tight mt-8"
+        data-aos="fade-up"
+        data-aos-delay="200"
       >
-        <router-link to="/" class="font-pixel text-2xl tracking-wider text-primary hover:text-accent transition-all duration-300">
-          FUNDIVEST
-        </router-link>
-        <p class="font-main text-xl mt-2 text-primary font-bold opacity-80">
-          SURVIVE THE MARKET
+        <a href="#" class="hover:bg-accent hover:text-primary px-4 py-2 border-[3px] border-transparent hover:border-accent transition-all">About Us</a>
+        <span class="text-accent hidden md:block">✦</span>
+        <a href="#" class="hover:bg-accent hover:text-primary px-4 py-2 border-[3px] border-transparent hover:border-accent transition-all">Catalog</a>
+        <span class="text-accent hidden md:block">✦</span>
+        <a href="#" class="hover:bg-accent hover:text-primary px-4 py-2 border-[3px] border-transparent hover:border-accent transition-all">Privacy</a>
+        <span class="text-accent hidden md:block">✦</span>
+        <a href="#" class="hover:bg-accent hover:text-primary px-4 py-2 border-[3px] border-transparent hover:border-accent transition-all">Terms</a>
+      </div>
+
+      <div 
+        class="w-full mt-12 pt-12 border-t-[6px] border-dashed border-accent flex flex-col items-center gap-6"
+        data-aos="fade-up"
+        data-aos-delay="400"
+      >
+        <p class="font-pixel text-xs md:text-sm tracking-widest uppercase opacity-80 text-center leading-loose">
+          © 2026 FUNDIVEST STUDIOS. <br class="md:hidden" /> ALL RIGHTS RESERVED. <br/>
+          <span class="inline-block mt-4">INSERT COIN TO CONTINUE</span>
         </p>
       </div>
 
-      <div 
-        class="flex flex-wrap justify-center gap-6 font-main font-bold text-2xl"
-        data-aos="fade-up"
-        data-aos-delay="200"
-        data-aos-anchor="#site-footer"
-      >
-        <a href="#" class="text-primary hover:text-accent hover:underline decoration-[3px] underline-offset-4 transition-colors">About Us</a>
-        <a href="#" class="text-primary hover:text-accent hover:underline decoration-[3px] underline-offset-4 transition-colors">Terms</a>
-        <a href="#" class="text-primary hover:text-accent hover:underline decoration-[3px] underline-offset-4 transition-colors">Privacy</a>
-      </div>
-
-      <div 
-        data-aos="zoom-in-left" 
-        data-aos-delay="400"
-        data-aos-anchor="#site-footer"
-      >
-        <button
-          class="font-pixel bg-primary text-black hover:bg-accent hover:text-primary px-6 py-3 text-sm border-[3px] border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[6px_6px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 active:translate-y-1 active:shadow-none transition-all duration-200 cursor-pointer"
-        >
-          LOREM IPSUM
-        </button>
-      </div>
-
-    </div>
-
-    <div 
-      v-if="isVisible"
-      class="max-w-7xl mx-auto mt-8 pt-4 border-t-[4px] border-dashed border-primary text-center opacity-80"
-      data-aos="fade-up"
-      data-aos-delay="600"
-      data-aos-anchor="#site-footer"
-    >
-      <p class="font-pixel text-[10px] text-primary tracking-widest w-full mt-2 uppercase">
-        © 2026 FUNDIVEST. ALL RIGHTS RESERVED.
-      </p>
     </div>
   </footer>
 </template>
@@ -107,7 +88,6 @@ onUnmounted(() => {
 <style scoped>
 footer {
   contain: paint;
-  /* Beri tinggi minimal agar observer tidak bingung saat konten v-if masih kosong */
-  min-height: 200px;
+  min-height: 500px; 
 }
 </style>
