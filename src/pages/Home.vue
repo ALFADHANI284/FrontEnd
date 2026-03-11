@@ -83,41 +83,23 @@ const flags = [
 
     <section class="bg-accent text-primary py-24 border-y-[4px] border-accent overflow-hidden">
       <div class="max-w-7xl mx-auto px-6 text-center">
-        <h2 data-aos="zoom-in" class="font-pixel text-4xl mb-16 tracking-tighter">GAME OVER: DAMPAK FATAL</h2>
+        <h2 data-aos="zoom-in" class="font-black text-4xl mb-16 tracking-tighter">GAME OVER: DAMPAK FATAL</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div data-aos="fade-right"
             class="bg-primary text-accent border-[4px] border-accent p-10 shadow-[10px_10px_0_0_rgba(255,255,255,0.2)] rotate-[-1deg] hover:rotate-0 transition-transform">
-            <h3 class="font-pixel text-2xl mb-6 uppercase underline">MODAL HILANG 100%</h3>
+            <h3 class="font-black text-2xl mb-6 uppercase underline">MODAL HILANG 100%</h3>
             <p class="text-xl font-bold leading-relaxed italic">Saat skema runtuh, penipu lari, dan seluruh uangmu
               lenyap tanpa sisa fisik yang bisa diklaim.</p>
           </div>
           <div data-aos="fade-left"
             class="bg-primary text-accent border-[4px] border-accent p-10 shadow-[10px_10px_0_0_rgba(255,255,255,0.2)] rotate-[1deg] hover:rotate-0 transition-transform">
-            <h3 class="font-pixel text-2xl mb-6 uppercase underline">LINGKARAN PINJOL</h3>
+            <h3 class="font-black text-2xl mb-6 uppercase underline">LINGKARAN PINJOL</h3>
             <p class="text-xl font-bold leading-relaxed italic">Terpaksa berhutang ke Pinjol Ilegal untuk menutup
               kerugian, menciptakan lubang hitam finansial.</p>
           </div>
         </div>
       </div>
     </section>
-
-    <!-- <section class="max-w-5xl mx-auto px-6 py-40 text-center">
-      <div data-aos="zoom-out-up"
-        class="bg-primary border-[6px] border-accent p-16 shadow-[20px_20px_0_0_#2C3E50] relative overflow-hidden">
-        <div class="absolute top-4 left-4 w-4 h-4 bg-accent rounded-full"></div>
-        <div class="absolute top-4 right-4 w-4 h-4 bg-accent rounded-full"></div>
-        
-        <h2 class="font-pixel text-4xl md:text-5xl text-accent mb-12 leading-tight">UJI PENGETAHUANMU SEKARANG!</h2>
-        <router-link to="/game"
-          class="font-pixel bg-accent text-primary px-16 py-8 text-2xl border-[4px] border-accent shadow-[8px_8px_0_0_rgba(0,0,0,0.5)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all inline-block uppercase tracking-widest">
-          START MISSION
-        </router-link>
-      </div>
-    </section> -->
-
-    <!-- <section class="w-full border-t-[4px] border-accent">
-      <img src="/hook.png" alt="hook image" class="w-full h-auto object-cover contrast-125" />
-    </section> -->
 
   </div>
 </template>
