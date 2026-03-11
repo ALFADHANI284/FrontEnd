@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../pages/Home.vue' 
 import Game1 from '../pages/Scene.vue'
 import Game from '../pages/game.vue'
+import HowToPlay from '../pages/HowToPlay.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -21,6 +22,11 @@ const router = createRouter({
       path: '/game',  
       name: 'game',
       component: Game
+    },
+    {
+      path: '/carabermain',
+      name: 'play',
+      component: HowToPlay
     }
   ]
 })
