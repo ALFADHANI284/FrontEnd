@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// Ubah import dari TitleScreen.vue menjadi Home.vue
 import Home from '../pages/Home.vue' 
 import Game1 from '../pages/Scene.vue'
 import Game from '../pages/game.vue'
 import HowToPlay from '../pages/HowToPlay.vue'
+import AboutUs from '../pages/AboutUs.vue'
+import NotFound from '../pages/NotFound.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -14,8 +15,8 @@ const router = createRouter({
       component: Home 
     },
     {
-      path: '/game',  
-      name: 'game',
+      path: '/scene',  
+      name: 'scene',
       component: Game1
     },
     {
@@ -27,6 +28,19 @@ const router = createRouter({
       path: '/carabermain',
       name: 'play',
       component: HowToPlay
+    },
+    {
+      path: '/aboutus',
+      name: 'aboutus',
+      component: AboutUs
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: NotFound, 
+      meta: { 
+        hideNavFooter: true 
+      }
     }
   ]
 })
