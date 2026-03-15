@@ -1,8 +1,46 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
+
+const router = useRouter()
+
+// === PENGAMAN PROGRESS (MODAL CUSTOM) ===
+const showExitModal = ref(false)
+const pendingRoute = ref<any>(null)
+const isConfirmedExit = ref(false)
+
+onBeforeRouteLeave((to, from, next) => {
+  if (gameState.value === 'intro' || isConfirmedExit.value) {
+    next() // Izinkan keluar jika di menu awal atau sudah konfirmasi
+  } else {
+    showExitModal.value = true // Munculkan Modal Custom
+    pendingRoute.value = to    // Simpan tujuan user
+    next(false)                // Tahan navigasi
+  }
+})
+
+const confirmExit = () => {
+  isConfirmedExit.value = true
+  showExitModal.value = false
+  if (pendingRoute.value) {
+    router.push(pendingRoute.value) // Lanjutkan keluar
+  }
+}
+
+const cancelExit = () => {
+  showExitModal.value = false
+  pendingRoute.value = null // Batal keluar
+}
+
+const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+  if (gameState.value !== 'intro') {
+    event.preventDefault()
+    event.returnValue = '' // Native browser popup untuk F5 / Close Tab
+  }
+}
 
 // === GAME STATE & CHAPTER MANAGEMENT ===
-const gameState = ref<'intro' | 'explore' | 'moving' | 'dialog'>('intro')
+const gameState = ref<'intro' | 'video' | 'explore' | 'moving' | 'dialog'>('intro')
 const currentChapter = ref(1)
 const currentDialogIndex = ref(0)
 const mcLeftPos = ref(10)
@@ -10,6 +48,77 @@ const mcLeftPos = ref(10)
 // === STATE ANIMASI TRANSISI CHAPTER ===
 const isChapterTransitioning = ref(false)
 const transitionText = ref('')
+
+// === BGM MANAGEMENT (AUDIO ENGINE) ===
+const bgmChapter1 = ref<HTMLAudioElement | null>(null)
+const bgmChapter2 = ref<HTMLAudioElement | null>(null) // Tambahan BGM Chapter 2
+
+// Inisialisasi Audio saat halaman dimuat
+onMounted(() => {
+  bgmChapter1.value = new Audio('/bgm-chapter-1.mp3')
+  bgmChapter1.value.loop = true
+
+  bgmChapter2.value = new Audio('/bgm-chapter-2.mp3') // Setup file audio Chapter 2
+  bgmChapter2.value.loop = true
+})
+
+// Hapus Audio dari memori saat halaman ditutup
+onUnmounted(() => {
+  if (bgmChapter1.value) bgmChapter1.value.pause()
+  if (bgmChapter2.value) bgmChapter2.value.pause()
+})
+
+// Fungsi Fade In
+const fadeAudioIn = (audio: HTMLAudioElement, targetVolume = 0.5, duration = 2000) => {
+  audio.volume = 0
+  audio.play().catch(e => console.log('Autoplay audio dicegah browser:', e))
+
+  const step = targetVolume / (duration / 50)
+  const fade = setInterval(() => {
+    if (audio.volume + step < targetVolume) {
+      audio.volume += step
+    } else {
+      audio.volume = targetVolume
+      clearInterval(fade)
+    }
+  }, 50)
+}
+
+// Fungsi Fade Out
+const fadeAudioOut = (audio: HTMLAudioElement, duration = 1000) => {
+  if (audio.paused) return
+  const step = audio.volume / (duration / 50)
+  const fade = setInterval(() => {
+    if (audio.volume - step > 0) {
+      audio.volume -= step
+    } else {
+      audio.volume = 0
+      audio.pause()
+      clearInterval(fade)
+    }
+  }, 50)
+}
+
+// Pantau perubahan State & Chapter untuk mengatur Musik
+watch([gameState, currentChapter], ([newState, newChapter]) => {
+  if (!bgmChapter1.value || !bgmChapter2.value) return
+
+  const isGameActive = newState === 'explore' || newState === 'moving' || newState === 'dialog'
+
+  // Kontrol BGM Chapter 1
+  if (isGameActive && newChapter === 1) {
+    if (bgmChapter1.value.paused) fadeAudioIn(bgmChapter1.value, 0.4, 2000)
+  } else {
+    if (!bgmChapter1.value.paused) fadeAudioOut(bgmChapter1.value, 1000)
+  }
+
+  // Kontrol BGM Chapter 2
+  if (isGameActive && newChapter === 2) {
+    if (bgmChapter2.value.paused) fadeAudioIn(bgmChapter2.value, 0.4, 2000)
+  } else {
+    if (!bgmChapter2.value.paused) fadeAudioOut(bgmChapter2.value, 1000)
+  }
+})
 
 // === DATA PEMAIN ===
 const fullName = ref('')
@@ -28,7 +137,7 @@ const submitName = () => {
   transitionText.value = 'CHAPTER 1'
 
   setTimeout(() => {
-    gameState.value = 'explore'
+    gameState.value = 'video'
     setTimeout(() => {
       isChapterTransitioning.value = false
     }, 1000)
@@ -48,7 +157,32 @@ const currentNpc = computed(() => {
   return '/Dompet Kamara.gif'
 })
 
-// 1. INTERFACE TYPESCRIPT
+// === LOGIKA VIDEO PROLOG ===
+const currentVideo = computed(() => {
+  if (currentChapter.value === 1) return '/prolog-chapter-1.mp4'
+  if (currentChapter.value === 2) return '/prolog-chapter-2.mp4'
+  return '/prolog-chapter-3.mp4'
+})
+
+const onVideoEnded = () => {
+  gameState.value = 'explore'
+}
+
+const skipVideo = () => {
+  gameState.value = 'explore'
+}
+
+// === TEKS NARASI KIRI ATAS ===
+const currentNarrative = computed(() => {
+  if (currentChapter.value === 1) {
+    return `Suatu pagi, ${firstName.value} sedang bersantai di depan rumah. Tiba-tiba, seorang kakek misterius memanggil dan menawarkan sesuatu...`
+  }
+  if (currentChapter.value === 2) {
+    return `Sesampainya di sekolah, ${firstName.value} bertemu teman sekelasnya. Mereka pun mengobrol tentang pentingnya belajar investasi...`
+  }
+  return `Tergoda oleh tawaran si Kakek, ${firstName.value} menyelinap ke kamar orang tuanya. Sebuah dompet tergeletak di atas meja...`
+})
+
 interface Choice {
   text: string;
   nextId: number;
@@ -64,7 +198,6 @@ interface Dialog {
   nextChapter?: number;
 }
 
-// 2. DATA DIALOG CHAPTER 1 (Lawan Kakek)
 const chapter1Dialogs = computed<Dialog[]>(() => [
   {
     speaker: 'npc',
@@ -98,7 +231,6 @@ const chapter1Dialogs = computed<Dialog[]>(() => [
   }
 ])
 
-// 3. DATA DIALOG CHAPTER 2 (Sekolah)
 const chapter2Dialogs = computed<Dialog[]>(() => [
   {
     speaker: 'npc',
@@ -132,7 +264,6 @@ const chapter2Dialogs = computed<Dialog[]>(() => [
   }
 ])
 
-// 4. DATA DIALOG CHAPTER 3 (Kamar)
 const chapter3Dialogs = computed<Dialog[]>(() => [
   {
     speaker: 'mc',
@@ -182,7 +313,7 @@ const startInteraction = () => {
 
   if (currentChapter.value === 1) mcLeftPos.value = 55
   else if (currentChapter.value === 2) mcLeftPos.value = 45
-  else mcLeftPos.value = 65 // Di Chapter 3 MC maju lebih jauh mendekati meja
+  else mcLeftPos.value = 65
 
   setTimeout(() => {
     gameState.value = 'dialog'
@@ -206,7 +337,7 @@ const nextDialog = (nextId?: number) => {
 
     setTimeout(() => {
       currentChapter.value = currentDialog.value!.nextChapter!
-      gameState.value = 'explore'
+      gameState.value = 'video'
       currentDialogIndex.value = 0
       mcLeftPos.value = 10
 
@@ -229,130 +360,189 @@ const nextDialog = (nextId?: number) => {
 <template>
   <div class="relative w-full h-screen bg-accent overflow-hidden font-main selection:bg-primary selection:text-accent">
 
-    <div class="absolute top-0 left-0 right-0 p-6 md:p-10 flex justify-between items-start z-30 pointer-events-none">
-      <h1
-        class="font-pixel text-2xl md:text-4xl text-white drop-shadow-[4px_4px_0_#2C3E50] tracking-widest uppercase mt-2">
-        SIMULASI FINANSIAL
-      </h1>
+    <div class="absolute top-0 left-0 right-0 p-3 lg:p-10 flex justify-between items-start z-30 pointer-events-none">
+      <div class="flex flex-col items-start gap-1 lg:gap-2">
+        <h1
+          class="font-pixel text-lg lg:text-4xl text-white drop-shadow-[2px_2px_0_#2C3E50] lg:drop-shadow-[4px_4px_0_#2C3E50] tracking-widest uppercase mt-1 lg:mt-2">
+          SIMULASI FINANSIAL
+        </h1>
+        <div v-if="gameState !== 'intro' && gameState !== 'video'"
+          class="font-main font-bold text-[8px] lg:text-sm bg-primary text-accent px-3 py-2 lg:px-4 lg:py-3 border-[2px] lg:border-[4px] border-accent shadow-[2px_2px_0_0_#2C3E50] lg:shadow-[4px_4px_0_0_#2C3E50] animate-[fade-in_0.5s_ease-out] max-w-[200px] lg:max-w-md leading-relaxed text-left pointer-events-auto">
+          {{ currentNarrative }}
+        </div>
+      </div>
+
       <router-link to="/"
-        class="pointer-events-auto font-pixel text-xs md:text-sm bg-primary text-accent px-6 py-3 border-[4px] border-accent shadow-[4px_4px_0_0_#2C3E50] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all uppercase">
+        class="pointer-events-auto font-pixel text-[10px] lg:text-sm bg-primary text-accent px-3 py-2 lg:px-6 lg:py-3 border-[2px] lg:border-[4px] border-accent shadow-[2px_2px_0_0_#2C3E50] lg:shadow-[4px_4px_0_0_#2C3E50] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all uppercase">
         ← KEMBALI
       </router-link>
     </div>
 
     <img :src="currentBackground" alt="Background Game"
       class="absolute inset-0 w-full h-full object-fill transition-all duration-500"
-      :class="{ 'blur-md brightness-50': gameState === 'dialog' || gameState === 'intro' }" />
+      :class="{ 'blur-sm lg:blur-md brightness-50': gameState === 'dialog' || gameState === 'intro' || gameState === 'video' }" />
 
     <div v-if="gameState === 'intro'"
-      class="absolute inset-0 z-40 flex items-center justify-center p-6 md:p-10 backdrop-blur-sm bg-black/20">
+      class="absolute inset-0 z-40 flex items-center justify-center p-4 lg:p-10 backdrop-blur-sm bg-black/20">
       <div
-        class="bg-primary border-[6px] border-accent p-8 md:p-14 shadow-[16px_16px_0_0_#2C3E50] max-w-2xl w-full flex flex-col items-center gap-8 animate-[bounce_0.5s_ease-out]">
-        <h2 class="font-pixel text-4xl md:text-5xl text-accent uppercase tracking-widest text-center">
+        class="bg-primary border-[4px] lg:border-[6px] border-accent p-4 lg:p-14 shadow-[6px_6px_0_0_#2C3E50] lg:shadow-[16px_16px_0_0_#2C3E50] max-w-[95%] lg:max-w-2xl w-full flex flex-col items-center gap-3 lg:gap-8 animate-[bounce_0.5s_ease-out]">
+        <h2 class="font-pixel text-2xl lg:text-5xl text-accent uppercase tracking-widest text-center leading-tight">
           ID REGISTRATION
         </h2>
-        <p class="font-main text-lg md:text-xl font-bold text-accent text-center opacity-80 leading-snug px-4">
+        <p class="font-main text-xs lg:text-xl font-bold text-accent text-center opacity-80 leading-snug px-2 lg:px-4">
           Masukkan nama lengkapmu untuk diterbitkan di sertifikat penyelesaian misi.
         </p>
         <input v-model="fullName" @keyup.enter="submitName" type="text" placeholder="Ketik nama lengkap..."
-          class="w-full font-main font-black text-xl md:text-2xl p-4 md:p-5 border-[4px] border-accent bg-white text-accent outline-none focus:shadow-[6px_6px_0_0_#2C3E50] transition-shadow" />
+          class="w-full font-main font-black text-sm lg:text-2xl p-2 lg:p-5 border-[3px] lg:border-[4px] border-accent bg-white text-accent outline-none focus:shadow-[4px_4px_0_0_#2C3E50] lg:focus:shadow-[6px_6px_0_0_#2C3E50] transition-shadow" />
         <button @click="submitName"
-          class="font-pixel w-full mt-2 bg-accent text-primary px-8 py-5 md:py-6 border-[4px] border-accent hover:bg-primary hover:text-accent hover:shadow-[6px_6px_0_0_#2C3E50] hover:-translate-y-1 transition-all active:translate-y-0 active:shadow-none text-xl md:text-2xl uppercase tracking-widest">
+          class="font-pixel w-full mt-1 lg:mt-2 bg-accent text-primary px-4 py-3 lg:px-8 lg:py-6 border-[3px] lg:border-[4px] border-accent hover:bg-primary hover:text-accent hover:shadow-[4px_4px_0_0_#2C3E50] lg:hover:shadow-[6px_6px_0_0_#2C3E50] hover:-translate-y-1 transition-all active:translate-y-0 active:shadow-none text-base lg:text-2xl uppercase tracking-widest">
           START GAME
         </button>
       </div>
     </div>
 
-    <div v-if="gameState === 'intro' || gameState === 'explore' || gameState === 'moving'"
-      class="absolute inset-0 z-20 transition-all duration-500"
-      :class="{ 'blur-md brightness-50 pointer-events-none': gameState === 'intro' }">
+    <div v-if="gameState === 'video'"
+      class="absolute inset-0 z-40 flex items-center justify-center bg-black/90 backdrop-blur-md">
+      <video :src="currentVideo" autoplay playsinline @ended="onVideoEnded"
+        class="w-full h-full max-w-5xl object-contain shadow-[0_0_30px_rgba(0,0,0,0.8)]"></video>
+      <button @click="skipVideo"
+        class="absolute bottom-6 right-6 lg:bottom-10 lg:right-10 font-pixel text-[10px] lg:text-sm bg-accent text-primary px-4 py-2 lg:px-6 lg:py-3 border-[2px] lg:border-[4px] border-accent shadow-[2px_2px_0_0_#E6DCC8] lg:shadow-[4px_4px_0_0_#E6DCC8] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all uppercase z-50">
+        Skip Video >>
+      </button>
+    </div>
+
+    <div v-if="gameState === 'explore' || gameState === 'moving'"
+      class="absolute inset-0 z-20 transition-all duration-500">
 
       <div v-if="gameState === 'explore'"
-        class="absolute top-24 left-1/2 -translate-x-1/2 font-pixel text-xs md:text-sm bg-primary px-6 py-3 border-[4px] border-accent text-center animate-pulse shadow-[4px_4px_0_0_#2C3E50]">
-        {{ currentChapter === 3 ? 'Klik Dompet untuk berinteraksi!' : 'Klik Karakter untuk berinteraksi!' }}
+        class="absolute top-12 lg:top-24 left-1/2 -translate-x-1/2 font-pixel text-[10px] lg:text-sm bg-primary px-3 py-2 lg:px-6 lg:py-3 border-[2px] lg:border-[4px] border-accent text-center animate-pulse shadow-[2px_2px_0_0_#2C3E50] lg:shadow-[4px_4px_0_0_#2C3E50] whitespace-nowrap">
+        {{ currentChapter === 3 ? 'Klik Dompet untuk interaksi!' : 'Klik Karakter untuk interaksi!' }}
       </div>
 
       <img :src="gameState === 'moving' ? '/MC_Char_jalan.gif' : '/MC_Char_Diam_Angin.gif'" alt="MC"
         class="absolute pixelated transition-all ease-linear" :class="[
-          // === REVISI UKURAN & POSISI MC ===
-          // w-72 md:w-96 untuk membesarkan karakter.
-          // bottom-0 md:bottom-[2%] agar kakinya turun menapak lantai.
-          currentChapter === 3 ? 'w-88 md:w-112 bottom-0 md:bottom-[0%]' :
-            currentChapter === 2 ? 'w-48 md:w-64 bottom-[10%]' :
-              'w-32 md:w-48 bottom-[10%]'
+          currentChapter === 3 ? 'w-36 lg:w-112 bottom-[5%] lg:bottom-[0%]' :
+            currentChapter === 2 ? 'w-24 lg:w-64 bottom-[15%] lg:bottom-[10%]' :
+              'w-20 lg:w-48 bottom-[15%] lg:bottom-[10%]'
         ]" style="transition-duration: 3000ms;" :style="{ left: mcLeftPos + '%' }" />
 
       <img :src="currentNpc" alt="NPC" @click="startInteraction" class="absolute pixelated" :class="[
-        // === REVISI UKURAN & POSISI DOMPET ===
-        // w-20 md:w-28 untuk membesarkan dompet.
-        // bottom-[30%] md:bottom-[32%] untuk menaikkannya ke atas meja.
-        // right-[18%] md:right-[20%] untuk menyesuaikan letak di meja.
-        currentChapter === 3 ? 'bottom-[30%] md:bottom-[36%] right-[18%] md:right-[14%] w-40 md:w-48' : 'bottom-[10%] right-[20%]',
-        currentChapter === 2 ? 'w-48 md:w-64' : (currentChapter === 1 ? 'w-32 md:w-48' : ''),
-        gameState === 'explore' ? 'cursor-pointer hover:scale-110 hover:-translate-y-4 transition-transform' : ''
+        currentChapter === 3 ? 'bottom-[35%] lg:bottom-[36%] right-[15%] lg:right-[14%] w-16 lg:w-48' : 'bottom-[15%] lg:bottom-[10%] right-[15%] lg:right-[20%]',
+        currentChapter === 2 ? 'w-24 lg:w-64' : (currentChapter === 1 ? 'w-20 lg:w-48' : ''),
+        gameState === 'explore' ? 'cursor-pointer hover:scale-110 hover:-translate-y-2 lg:hover:-translate-y-4 transition-transform' : ''
       ]" />
 
       <div v-if="gameState === 'explore'"
-        class="absolute text-4xl md:text-5xl font-pixel animate-bounce pointer-events-none text-white drop-shadow-[4px_4px_0_#2C3E50]"
-        :class="currentChapter === 3 ? 'bottom-[50%] md:bottom-[56%] right-[22%] md:right-[17%]' : 'bottom-[35%] md:bottom-[40%] right-[24%]'">
+        class="absolute text-2xl lg:text-5xl font-pixel animate-bounce pointer-events-none text-white drop-shadow-[2px_2px_0_#2C3E50] lg:drop-shadow-[4px_4px_0_#2C3E50]"
+        :class="currentChapter === 3 ? 'bottom-[48%] lg:bottom-[56%] right-[18%] lg:right-[17%]' : 'bottom-[40%] lg:bottom-[40%] right-[20%] lg:right-[24%]'">
         ▼
       </div>
     </div>
 
     <div v-if="gameState === 'dialog' && currentDialog" class="absolute inset-0 z-20">
-
       <img v-if="currentDialog.speaker === 'mc'" :src="'/MC_Char.png'"
-        class="absolute bottom-[200px] md:bottom-[250px] left-4 md:left-20 w-56 md:w-80 pixelated " />
+        class="absolute bottom-[5%] lg:bottom-[250px] left-2 lg:left-20 w-56 lg:w-80 pixelated drop-shadow-[0_10px_0_rgba(0,0,0,0.5)]" />
 
       <img v-if="currentDialog.speaker === 'npc'" :src="currentNpc"
-        class="absolute bottom-[200px] md:bottom-[250px] right-4 md:right-20 pixelated"
-        :class="currentChapter === 3 ? 'w-32 md:w-48' : 'w-56 md:w-80'" />
+        class="absolute bottom-[5%] lg:bottom-[250px] right-2 lg:right-20 pixelated drop-shadow-[0_10px_0_rgba(0,0,0,0.5)]"
+        :class="currentChapter === 3 ? 'w-32 lg:w-48' : 'w-56 lg:w-80'" />
 
       <div
-        class="absolute bottom-6 left-6 right-6 md:bottom-12 md:left-24 md:right-24 bg-primary border-[6px] border-accent p-6 md:p-10 shadow-[16px_16px_0_0_rgba(44,62,80,0.8)]">
+        class="absolute bottom-2 left-2 right-2 lg:bottom-12 lg:left-24 lg:right-24 bg-primary border-[4px] lg:border-[6px] border-accent p-3 lg:p-10 shadow-[4px_4px_0_0_rgba(44,62,80,0.8)] lg:shadow-[16px_16px_0_0_rgba(44,62,80,0.8)]">
 
         <div
-          class="absolute -top-6 md:-top-8 border-[4px] border-accent bg-accent text-primary px-6 py-2 font-pixel uppercase tracking-widest text-sm md:text-base shadow-[4px_4px_0_0_#E6DCC8]"
-          :class="currentDialog.speaker === 'mc' ? 'left-6 md:left-10' : 'right-6 md:right-10'">
+          class="absolute -top-5 lg:-top-8 border-[2px] lg:border-[4px] border-accent bg-accent text-primary px-4 py-1.5 lg:px-6 lg:py-2 font-pixel uppercase tracking-widest text-[10px] lg:text-base shadow-[2px_2px_0_0_#E6DCC8] lg:shadow-[4px_4px_0_0_#E6DCC8]"
+          :class="currentDialog.speaker === 'mc' ? 'left-2 lg:left-10' : 'right-2 lg:right-10'">
           {{ currentDialog.name }}
         </div>
 
-        <div v-if="!currentDialog.isChoice" class="mt-4 flex flex-col min-h-[120px] justify-between">
-          <p class="font-main text-xl md:text-3xl font-black leading-relaxed text-accent"
-            :class="{ 'italic opacity-90': currentChapter === 3 }">
-            "{{ currentDialog.text }}"
-          </p>
+        <div class="max-h-[35vh] lg:max-h-none overflow-y-auto pr-2">
+          <div v-if="!currentDialog.isChoice"
+            class="mt-1 lg:mt-4 flex flex-col h-full lg:min-h-[120px] justify-between">
+            <p class="font-main text-xs lg:text-3xl font-black leading-snug lg:leading-relaxed text-accent"
+              :class="{ 'italic opacity-90': currentChapter === 3 }">
+              "{{ currentDialog.text }}"
+            </p>
 
-          <button @click="nextDialog()"
-            class="self-end mt-8 font-pixel bg-accent text-primary px-8 py-4 border-[4px] border-accent hover:bg-primary hover:text-accent hover:shadow-[6px_6px_0_0_#2C3E50] hover:-translate-y-1 transition-all active:translate-y-0 active:shadow-none text-sm md:text-base">
-            > Lanjut
-          </button>
+            <button @click="nextDialog()"
+              class="self-end mt-2 lg:mt-8 font-pixel bg-accent text-primary px-3 py-2 lg:px-8 lg:py-4 border-[2px] lg:border-[4px] border-accent hover:bg-primary hover:text-accent hover:shadow-[2px_2px_0_0_#2C3E50] lg:hover:shadow-[6px_6px_0_0_#2C3E50] hover:-translate-y-1 transition-all active:translate-y-0 active:shadow-none text-[8px] lg:text-base">
+              > Lanjut
+            </button>
+          </div>
+
+          <div v-else class="mt-1 lg:mt-4 flex flex-col gap-2 lg:gap-4">
+            <button v-for="(choice, index) in currentDialog.choices" :key="index" @click="nextDialog(choice.nextId)"
+              class="w-full text-left font-main font-black text-[10px] lg:text-2xl p-2 lg:p-6 border-[2px] lg:border-[4px] border-accent bg-white text-accent hover:bg-accent hover:text-primary shadow-[2px_2px_0_0_#2C3E50] lg:shadow-[6px_6px_0_0_#2C3E50] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all group">
+              {{ choice.text }}
+            </button>
+          </div>
         </div>
-
-        <div v-else class="mt-4 flex flex-col gap-4">
-          <button v-for="(choice, index) in currentDialog.choices" :key="index" @click="nextDialog(choice.nextId)"
-            class="w-full text-left font-main font-black text-xl md:text-2xl p-4 md:p-6 border-[4px] border-accent bg-white text-accent hover:bg-accent hover:text-primary shadow-[6px_6px_0_0_#2C3E50] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all group">
-            {{ choice.text }}
-          </button>
-        </div>
-
       </div>
     </div>
 
     <div
-      class="absolute inset-0 z-[60] bg-accent border-b-[24px] border-primary flex flex-col items-center justify-center transition-transform duration-700 ease-in-out shadow-[0_20px_0_0_rgba(0,0,0,0.5)] pointer-events-none"
+      class="absolute inset-0 z-[60] bg-accent border-b-[12px] lg:border-b-[24px] border-primary flex flex-col items-center justify-center transition-transform duration-700 ease-in-out shadow-[0_10px_0_0_rgba(0,0,0,0.5)] pointer-events-none"
       :class="isChapterTransitioning ? 'translate-y-0' : '-translate-y-[120%]'">
-      <div class="flex flex-col items-center gap-6">
+      <div class="flex flex-col items-center gap-3 lg:gap-6">
         <h2
-          class="font-pixel text-5xl md:text-7xl text-primary uppercase tracking-widest drop-shadow-[6px_6px_0_#2C3E50] animate-pulse">
+          class="font-pixel text-2xl lg:text-7xl text-primary uppercase tracking-widest drop-shadow-[2px_2px_0_#2C3E50] lg:drop-shadow-[6px_6px_0_#2C3E50] animate-pulse text-center px-4">
           {{ transitionText }}
         </h2>
-        <div class="w-48 h-6 bg-primary border-[4px] border-primary overflow-hidden">
+        <div class="w-24 lg:w-48 h-3 lg:h-6 bg-primary border-[2px] lg:border-[4px] border-primary overflow-hidden">
           <div class="h-full bg-white animate-[pulse_0.5s_infinite] w-full origin-left"></div>
         </div>
       </div>
     </div>
 
+    <div v-if="gameState !== 'intro' && gameState !== 'video'"
+      class="absolute bottom-2 left-2 lg:bottom-4 lg:left-4 z-30 pointer-events-none animate-[fade-in_1s_ease-out]">
+      <p
+        class="font-pixel text-[6px] lg:text-[10px] text-white/80 drop-shadow-[1px_1px_0_#2C3E50] tracking-widest uppercase">
+        ♪ BGM Dibuat oleh Gemini AI
+      </p>
+    </div>
+
+    <div
+      class="fixed inset-0 z-[999999] bg-accent border-[8px] lg:border-[16px] border-primary flex-col items-center justify-center p-6 lg:p-8 text-center hidden portrait:flex">
+      <div class="text-white text-5xl lg:text-7xl mb-6 lg:mb-8 animate-[spin_2s_ease-in-out_infinite]">
+        ↻
+      </div>
+      <h2
+        class="font-pixel text-2xl lg:text-5xl text-primary uppercase tracking-widest drop-shadow-[2px_2px_0_#2C3E50] lg:drop-shadow-[4px_4px_0_#2C3E50] mb-4 lg:mb-6">
+        MODE LANDSCAPE
+      </h2>
+      <p
+        class="font-main text-xs lg:text-xl font-bold text-white opacity-90 leading-snug max-w-xs lg:max-w-md border-[2px] lg:border-[4px] border-primary p-3 lg:p-4 bg-black/20">
+        Silakan putar perangkat mobile Anda menjadi horizontal untuk pengalaman bermain yang lebih baik.
+      </p>
+    </div>
+
+    <div v-if="showExitModal"
+      class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 portrait:hidden">
+      <div
+        class="bg-primary border-[4px] lg:border-[6px] border-accent p-6 lg:p-10 shadow-[8px_8px_0_0_#2C3E50] lg:shadow-[16px_16px_0_0_#2C3E50] max-w-sm lg:max-w-lg w-full flex flex-col items-center gap-4 lg:gap-6 animate-[bounce_0.3s_ease-out]">
+
+        <h2 class="font-pixel text-xl lg:text-3xl text-accent uppercase tracking-widest text-center leading-tight">
+          PERINGATAN!
+        </h2>
+
+        <p class="font-main text-sm lg:text-xl font-bold text-accent text-center opacity-90 leading-snug">
+          Progress game kamu akan hilang jika meninggalkan halaman ini sekarang. Yakin ingin keluar?
+        </p>
+
+        <div class="flex gap-3 lg:gap-6 w-full mt-2">
+          <button @click="cancelExit"
+            class="flex-1 font-pixel bg-white text-accent px-2 py-3 lg:py-4 border-[3px] lg:border-[4px] border-accent hover:bg-accent hover:text-primary shadow-[4px_4px_0_0_#2C3E50] lg:shadow-[6px_6px_0_0_#2C3E50] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all text-[10px] lg:text-base uppercase tracking-wider">
+            TETAP MAIN
+          </button>
+
+          <button @click="confirmExit"
+            class="flex-1 font-pixel bg-accent text-primary px-2 py-3 lg:py-4 border-[3px] lg:border-[4px] border-accent hover:bg-primary hover:text-accent shadow-[4px_4px_0_0_#2C3E50] lg:shadow-[6px_6px_0_0_#2C3E50] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all text-[10px] lg:text-base uppercase tracking-wider">
+            KELUAR
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -361,5 +551,17 @@ const nextDialog = (nextId?: number) => {
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

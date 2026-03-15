@@ -33,9 +33,7 @@ const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
 };
 
-// FUNGSI BARU: Deteksi perubahan ukuran layar
 const handleResize = () => {
-  // 768px adalah breakpoint 'md' di Tailwind
   if (window.innerWidth >= 768 && isMobileMenuOpen.value) {
     isMobileMenuOpen.value = false;
   }
@@ -72,6 +70,7 @@ onUnmounted(() => {
 
       <div
         class="hidden md:flex items-center h-full border-l-[4px] border-accent font-main text-xl font-black uppercase tracking-tight">
+        
         <router-link to="/carabermain"
           class="relative overflow-hidden h-full flex items-center pl-8 pr-12 hover:bg-accent hover:text-primary transition-colors border-r-[4px] border-accent group">
           <span class="relative z-10">How To Play</span>
@@ -82,7 +81,7 @@ onUnmounted(() => {
           </svg>
         </router-link>
 
-        <a href="#"
+        <router-link to="/catalog"
           class="relative overflow-hidden h-full flex items-center pl-8 pr-12 hover:bg-accent hover:text-primary transition-colors border-r-[4px] border-accent group">
           <span class="relative z-10">Catalog</span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -90,7 +89,7 @@ onUnmounted(() => {
             <path
               d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z" />
           </svg>
-        </a>
+        </router-link>
 
         <router-link to="/aboutus"
           class="relative overflow-hidden h-full flex items-center pl-8 pr-12 hover:bg-accent hover:text-primary transition-colors border-accent group">
@@ -123,7 +122,7 @@ onUnmounted(() => {
         class="fixed top-20 left-0 right-0 z-[90] bg-primary flex flex-col font-main font-black uppercase text-lg text-accent border-b-[4px] border-accent shadow-[0_10px_0_0_rgba(0,0,0,0.2)]">
         <div class="absolute inset-0 border-x-[4px] border-accent pointer-events-none"></div>
 
-        <a href="#" @click="toggleMobileMenu"
+        <router-link to="/carabermain" @click="toggleMobileMenu"
           class="relative overflow-hidden flex items-center px-6 py-6 border-b-[4px] border-accent hover:bg-accent hover:text-primary transition-colors tracking-tight group">
           <span class="relative z-10">How To Play</span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -131,9 +130,9 @@ onUnmounted(() => {
             <path
               d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
           </svg>
-        </a>
+        </router-link>
 
-        <a href="#" @click="toggleMobileMenu"
+        <router-link to="/catalog" @click="toggleMobileMenu"
           class="relative overflow-hidden flex items-center px-6 py-6 border-b-[4px] border-accent hover:bg-accent hover:text-primary transition-colors tracking-tight group">
           <span class="relative z-10">Catalog</span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -141,16 +140,16 @@ onUnmounted(() => {
             <path
               d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z" />
           </svg>
-        </a>
+        </router-link>
 
-        <a href="#" @click="toggleMobileMenu"
+        <router-link to="/aboutus" @click="toggleMobileMenu"
           class="relative overflow-hidden flex items-center px-6 py-6 border-b-[4px] border-accent hover:bg-accent hover:text-primary transition-colors tracking-tight group">
           <span class="relative z-10">About Us</span>
           <div
             class="absolute right-0 top-1/2 -translate-y-1/2 text-[60px] font-pixel text-accent group-hover:text-primary transition-all leading-none pt-4">
             ?
           </div>
-        </a>
+        </router-link>
 
         <div class="w-full py-4 text-[10px] text-center font-pixel tracking-widest opacity-80 bg-primary z-10">
           © 2026 FUNDIVEST - PROTECT YOUR ASSETS
@@ -161,7 +160,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* Optional: Menambahkan animasi jika belum ada di file CSS globalmu */
 .menu-slide-enter-active,
 .menu-slide-leave-active {
   transition:
