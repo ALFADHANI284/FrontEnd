@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { onMounted, nextTick } from "vue";
+import Logo from "../assets/Logo.svg"
 
 onMounted(async () => {
   await nextTick();
@@ -27,14 +28,6 @@ const coreValues = ref([
     title: 'Kreativitas Tanpa Batas', 
     desc: 'Mendorong rasa ingin tahu lewat teka-teki dan interaksi visual yang menarik.'
   }
-])
-
-// Data untuk Statistik
-const stats = ref([
-  { label: 'Total Pemain', value: '5,234' },
-  { label: 'Modul Selesai', value: '12' },
-  { label: 'Quest Harian', value: '1,432' },
-  { label: 'Konten Edukasi', value: '45+' }
 ])
 
 // Data untuk Tim
@@ -63,72 +56,79 @@ const teamMembers = ref([
 
 // Data untuk Timeline
 const journey = ref([
-  { year: '2023', event: 'FUNDIVEST Didirikan' },
-  { year: '2024', event: '1000 Pengguna Pertama' },
-  { year: '2025', event: 'Fitur Investasi Real-time' }
+  { year: '2023', event: 'Ide FUNDIVEST Lahir' },
+  { year: '2024', event: 'Pengembangan Purwarupa Game' },
+  { year: '2025', event: 'Perilisan Modul Simulasi Pertama' }
 ])
 </script>
 
 <template>
   <div class="bg-primary min-h-screen text-accent font-main selection:bg-accent selection:text-primary overflow-x-hidden">
     
-    <Navbar />
-
     <main class="max-w-7xl mx-auto px-6 pt-32 pb-24 w-full">
       
-      <!-- Hero Section -->
-      <section class="text-center max-w-3xl mx-auto mb-32" data-aos="fade-down">
-        <div class="bg-primary font-pixel text-[10px] px-6 py-2 border-[4px] border-accent mb-10 shadow-[6px_6px_0_0_#2C3E50] rotate-[-1.5deg] inline-block">
+      <section class="text-center max-w-3xl mx-auto mb-20" data-aos="fade-down">
+        <!-- <div class="bg-primary font-pixel text-[10px] px-6 py-2 border-[4px] border-accent mb-10 shadow-[6px_6px_0_0_#2C3E50] rotate-[-1.5deg] inline-block">
           STATUS: ABOUT PAGE
-        </div>
+        </div> -->
         
-        <h1 class="font-black text-6xl md:text-7xl leading-[0.85] tracking-tighter mb-10 uppercase text-accent">
+        <!-- <h1 class="font-black text-6xl md:text-7xl leading-[0.85] tracking-tighter mb-10 uppercase text-accent">
           Tentang <br />
           <span class="italic underline decoration-[8px] decoration-accent underline-offset-8">FUNDIVEST</span>
-        </h1>
-        
-        <p class="text-xl md:text-2xl font-bold leading-tight text-accent opacity-90">
-          Platform edukasi finansial yang mengubah cara belajar investasi 
-          menjadi pengalaman interaktif dan menyenangkan.
-        </p>
+        </h1> -->
       </section>
 
-      <!-- Misi Section - Styling seperti "Apa itu Saham Bodong?" -->
-      <section class="border-y-[4px] border-accent mb-32">
+      <section class="max-w-4xl mx-auto mb-32 text-center" data-aos="fade-up">
+       <div class="w-39 h-39 mx-auto bg-primary mb-8 flex items-center justify-center hover:rotate-0 transition-transform cursor-pointer overflow-hidden p-2">
+        <img :src="Logo" alt="Logo FundiVest" class="w-full h-full object-contain" />
+      </div>
+
+        <h2 class="font-black text-4xl md:text-5xl mb-4 uppercase tracking-tighter">
+          Apa itu FundiVest?
+        </h2>
+
+        <p class="text-xl font-bold italic mb-8 text-accent opacity-80">
+          Lawan investasi bodong dengan simulasi nyata, bukan sekadar teori.
+        </p>
+
+        <div class="w-24 h-2 bg-accent mx-auto mb-10"></div> 
+
+        <div class="text-lg md:text-xl font-bold leading-relaxed text-left space-y-6 border-[4px] border-accent p-8 bg-primary shadow-[12px_12px_0_0_#2C3E50]">
+          <p>
+            Kami muak melihat masyarakat terus menjadi korban penipuan berkedok investasi seperti skema Ponzi atau trading abal-abal. Banyak platform edukasi yang mencoba menyelesaikan masalah ini, tapi sayangnya materi yang disampaikan seringkali terlalu kaku, penuh jargon, dan sangat membosankan.
+          </p>
+          <p>
+            Di situlah <span class="bg-accent text-primary px-2 py-1 uppercase tracking-wider">FundiVest</span> lahir. Kami hadir sebagai platform edukasi finansial yang mengubah cara belajar investasi menjadi pengalaman interaktif. Melalui simulasi mini-game, kamu bisa merasakan langsung tegangnya mengambil keputusan finansial, mengenali *red flags*, dan melihat dampak dari setiap pilihanmu tanpa harus kehilangan uang sepeser pun di dunia nyata.
+          </p>
+        </div>
+      </section>
+
+      <section class="border-y-[4px] border-accent mb-32 bg-primary">
         <div class="grid grid-cols-1 md:grid-cols-2">
-          <div class="p-16 border-b-[4px] md:border-b-0 md:border-r-[4px] border-accent"
+          
+          <div class="p-16 border-b-[4px] md:border-b-0 md:border-r-[4px] border-accent hover:bg-accent hover:text-primary transition-colors group"
                data-aos="fade-right">
-            <h2 class="font-black text-4xl mb-6 uppercase tracking-tighter">
-              Misi Kami
+            <h2 class="font-black text-4xl mb-6 uppercase tracking-tighter group-hover:text-primary">
+              Visi Kami
             </h2>
-            <p class="text-xl font-bold leading-snug">
-              Memberikan literasi keuangan yang mudah dipahami, interaktif, 
-              dan dapat diakses oleh semua kalangan tanpa terkecuali.
+            <p class="text-xl font-bold leading-snug group-hover:text-primary">
+              Menciptakan generasi cerdas finansial yang kebal terhadap segala bentuk jebakan investasi bodong dan skema penipuan.
             </p>
           </div>
-          <div class="p-16 flex items-center bg-primary italic font-black text-3xl leading-tight text-accent"
+
+          <div class="p-16 hover:bg-accent hover:text-primary transition-colors group"
                data-aos="fade-left">
-            "Literasi keuangan adalah kunci masa depan yang lebih baik."
+            <h2 class="font-black text-4xl mb-6 uppercase tracking-tighter group-hover:text-primary">
+              Misi Kami
+            </h2>
+            <p class="text-xl font-bold leading-snug group-hover:text-primary">
+              Menghadirkan edukasi keuangan yang mudah dipahami, praktis, dan interaktif melalui simulasi nyata yang membongkar taktik penipuan.
+            </p>
           </div>
+
         </div>
       </section>
 
-      <!-- Statistik - Grid seperti di home -->
-      <section class="mb-32">
-        <h2 class="font-black text-4xl mb-16 text-center uppercase" data-aos="fade-up">
-          Capaian Kami
-        </h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div v-for="(stat, index) in stats" :key="index" 
-               class="bg-primary border-[4px] border-accent p-8 text-center shadow-[8px_8px_0_0_#2C3E50] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
-               data-aos="zoom-in" :data-aos-delay="index * 100">
-            <div class="text-4xl font-black text-accent mb-2">{{ stat.value }}</div>
-            <div class="font-bold uppercase text-sm tracking-wider">{{ stat.label }}</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Nilai & Prinsip - Styling seperti Red Flags -->
       <section class="mb-32">
         <h2 class="font-black text-4xl mb-16 text-center uppercase" data-aos="fade-up">
           Nilai & Prinsip
@@ -144,7 +144,6 @@ const journey = ref([
         </div>
       </section>
 
-      <!-- Timeline Perjalanan -->
       <section class="mb-32">
         <h2 class="font-black text-4xl mb-16 text-center uppercase" data-aos="fade-up">
           Perjalanan Kami
@@ -158,14 +157,12 @@ const journey = ref([
               <div class="font-black text-3xl text-accent mb-3">{{ item.year }}</div>
               <div class="font-bold text-lg">{{ item.event }}</div>
             </div>
-            <!-- Panah penghubung (desktop only) -->
             <div v-if="index < journey.length - 1" 
                  class="hidden md:block absolute top-1/2 -right-3 text-3xl text-accent">→</div>
           </div>
         </div>
       </section>
 
-      <!-- Tim Kami -->
       <section class="mb-32">
         <h2 class="font-black text-4xl mb-16 text-center uppercase" data-aos="fade-up">
           Tim Kami
@@ -180,7 +177,6 @@ const journey = ref([
                 <img :src="member.avatar" :alt="member.name" 
                      class="w-full h-full object-cover pixelated" />
               </div>
-              <!-- Decorative corner (opsional, subtle) -->
               <div class="absolute -top-2 -right-2 w-4 h-4 bg-accent border-2 border-accent"></div>
             </div>
             <h3 class="font-black text-xl mb-1">{{ member.name }}</h3>
@@ -189,14 +185,13 @@ const journey = ref([
         </div>
       </section>
 
-      <!-- Call to Action - Styling seperti GAME OVER section -->
       <section class="bg-accent text-primary py-20 border-y-[4px] border-accent -mx-6 px-6">
         <div class="max-w-4xl mx-auto text-center">
           <h2 class="font-black text-4xl mb-6 tracking-tighter" data-aos="zoom-in">
             Siap Memulai Petualangan?
           </h2>
           <p class="text-xl font-bold mb-10 max-w-2xl mx-auto opacity-90" data-aos="fade-up">
-            Bergabung dengan ribuan pemain lain dalam petualangan finansial.
+            Bergabung dengan para pemain lain dalam membasmi investasi bodong.
           </p>
           <router-link to="/game"
              class="bg-primary text-accent text-2xl font-black px-12 py-6 border-[4px] border-accent shadow-[10px_10px_0_0_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all uppercase inline-block"
@@ -207,33 +202,27 @@ const journey = ref([
       </section>
 
     </main>
-
-    <Footer />
   </div>
 </template>
 
 <style scoped>
-/* Font pixel untuk status badge - copy dari home */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 .font-pixel {
   font-family: 'Press Start 2P', cursive;
 }
 
-/* Pixelated image rendering */
 .pixelated {
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
 }
 
-/* Selection styling - copy dari home */
 ::selection {
   background: #2c3e50;
   color: #e6dcc8;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .p-16 {
     padding: 3rem;
@@ -249,7 +238,6 @@ const journey = ref([
   }
 }
 
-/* Hover effects minimal */
 .group:hover .group-hover\:text-primary {
   color: #e6dcc8;
 }
