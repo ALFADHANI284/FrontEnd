@@ -4,23 +4,23 @@ import { ref } from 'vue';
 const steps = [
   {
     id: '01',
-    title: 'Discovery Dive',
-    desc: 'Pelajari dasar-dasar pasar saham dan instrumen investasi. Pahami risiko dan cara kerja fundamental perusahaan sebelum memulai.',
+    title: 'Register Player',
+    desc: 'Mulai petualangan finansialmu! Masukkan namamu untuk membuat profil dan bersiap masuk ke dalam pasar investasi virtual.',
   },
   {
     id: '02',
-    title: 'Concept Crafting',
-    desc: 'Bangun strategi portofoliomu. Susun rencana alokasi dana virtualmu ke berbagai aset untuk bertahan dari fluktuasi pasar.',
+    title: 'Mulai Simulasi',
+    desc: 'Perhatikan kondisi pasar saham dan berbagai instrumen investasi. Analisis situasi sebelum mengalokasikan modal awalmu.',
   },
   {
     id: '03',
-    title: 'Pixel Perfection',
-    desc: 'Eksekusi trading pertamamu! Pantau pergerakan harga secara real-time dan ambil keputusan jual/beli di saat yang tepat.',
+    title: 'Tentukan Alur',
+    desc: 'Setiap keputusan ada harganya. Pilih strategi investasi di berbagai skenario ekonomi dan bertahanlah dari fluktuasi pasar.',
   },
   {
     id: '04',
-    title: 'Launch & Beyond',
-    desc: 'Bertahanlah dari krisis pasar! Kelola profitmu, hindari kebangkrutan, dan jadilah survivor terbaik di leaderboard.',
+    title: 'Raih Ending & Sertifikat',
+    desc: 'Lihat hasil akhir dari portofoliomu. Apakah kamu bangkrut atau sukses besar? Dapatkan sertifikat eksklusif berdasarkan performamu!',
   },
 ] as const;
 
@@ -37,15 +37,17 @@ const toggle = (index: number) => {
     <div class="max-w-4xl mx-auto px-6">
 
       <div class="text-center mb-16">
-        <h2 class="text-5xl md:text-7xl font-pixel text-secondary kursor-interaktif">HOW TO PLAY</h2>
-        <p class="mt-4 text-gray-400 text-lg font-mono">Survive the market in 4 easy steps.</p>
+        <h2 class="text-4xl md:text-5xl font-pixel text-secondary kursor-interaktif drop-shadow-md">
+          Cara Bermain
+        </h2>
+        <p class="mt-4 text-gray-400 text-lg font-mono">Mulai petualangan finansialmu dalam 4 langkah.</p>
       </div>
 
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-6">
         <div 
           v-for="(step, index) in steps" 
           :key="step.id"
-          class="bg-primary transition-all duration-300 accordion-item"
+          class="bg-primary transition-all duration-200 accordion-item relative"
         >
           <button 
             @click="toggle(index)"
@@ -53,15 +55,14 @@ const toggle = (index: number) => {
           >
             <div class="flex items-center gap-6">
               <span 
-                class="font-pixel text-2xl md:text-3xl tracking-widest" 
-                style="color: var(--color-secondary);"
+                class="font-pixel text-3xl md:text-4xl tracking-widest text-secondary opacity-80" 
               >
                 {{ step.id }}
               </span>
               
               <span 
-                class="text-secondary transition-all duration-300 font-sans"
-                :class="openIndex === index ? 'text-xl md:text-2xl font-bold' : 'text-lg md:text-xl font-medium'"
+                class="text-secondary transition-all duration-300 font-pixel tracking-wide"
+                :class="openIndex === index ? 'text-xl md:text-2xl' : 'text-lg md:text-xl'"
               >
                 {{ step.title }}
               </span>
@@ -71,16 +72,15 @@ const toggle = (index: number) => {
               <svg 
                 v-if="openIndex !== index" 
                 viewBox="0 0 12 12" 
-                class="w-4 h-4"
+                class="w-5 h-5 transition-transform"
                 style="fill: var(--color-secondary);"
               >
                 <path d="M5 0h2v5h5v2H7v5H5V7H0V5h5V0z" />
               </svg>
-
               <svg 
                 v-else 
                 viewBox="0 0 12 12" 
-                class="w-4 h-4"
+                class="w-5 h-5 transition-transform rotate-90"
                 style="fill: var(--color-secondary);"
               >
                 <path d="M2 0L0 2l4 4-4 4 2 2 4-4 4 4 2-2-4-4 4-4-2-2-4 4-4-4z" />
@@ -90,7 +90,7 @@ const toggle = (index: number) => {
 
           <div 
             v-show="openIndex === index"
-            class="px-6 pb-6 ml-[4.5rem] text-gray-400 leading-relaxed text-sm md:text-base font-sans"
+            class="px-6 pb-6 ml-[4.5rem] text-black leading-relaxed text-sm md:text-base font-mono border-t border-dashed border-secondary/30 pt-4 mt-2"
           >
             {{ step.desc }}
           </div>
@@ -102,13 +102,23 @@ const toggle = (index: number) => {
 </template>
 
 <style scoped>
-/* Menambahkan border secondary ke setiap kotak akordeon */
+/* Desain kotak bergaya retro pixel art */
 .accordion-item {
-  border: 2px solid var(--color-secondary);
+  border: 3px solid var(--color-secondary);
+  /* Efek bayangan solid khas retro 8-bit */
+  box-shadow: 4px 4px 0px 0px var(--color-secondary);
+  transform: translateY(0);
 }
 
-/* Opsional: Efek glow saat di-hover untuk memperkuat kesan retro/game */
-.accordion-item:hover {
-  box-shadow: 0 0 10px -2px var(--color-secondary);
+/* Animasi saat dihover atau diklik, seakan tombol ditekan */
+.accordion-item:hover,
+.accordion-item:focus-within {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px var(--color-secondary);
+}
+
+.accordion-item:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px var(--color-secondary);
 }
 </style>
