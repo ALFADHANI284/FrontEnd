@@ -36,7 +36,7 @@
 
       <button 
         @click="goBack"
-        class="bg-black text-primary border-4 border-secondary px-6 py-3 text-lg font-bold uppercase hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(255,215,0,1)] active:translate-y-0 active:shadow-none transition-all duration-100 flex items-center gap-2"
+        class="bg-black text-primary border-4 border-secondary px-6 py-3 text-lg font-bold uppercase hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:translate-y-0 active:shadow-none transition-all duration-100 flex items-center gap-2"
       >
         <span class="text-xl">↺</span> 
         Coba Lagi
@@ -83,7 +83,7 @@ const goBack = () => {
 
 .glitch-effect::after {
   animation: glitch-2 2s infinite;
-  color: #F5A623; /* Oren/gold, nyambung dengan secondary */
+  color: #F5A623; 
   z-index: -2;
 }
 
