@@ -14,7 +14,7 @@ onMounted(async () => {
 
 const flags = [
   {
-    icon: "/Untung.webp", // Langsung panggil path-nya dari root
+    icon: "/Untung.webp", 
     title: "Untung Gila",
     desc: "Menjanjikan return pasti besar tanpa risiko.",
   },
@@ -68,7 +68,7 @@ const flags = [
         class="text-xl md:text-2xl max-w-2xl font-bold leading-tight mb-12 text-accent opacity-90"
       >
         Dunia finansial sedang diserang oleh ancaman
-        <span class="bg-accent text-primary">Saham Bodong</span>. Pelajari
+        <span class="bg-accent text-primary">Investasi Bodong</span>. Pelajari
         polanya, selamatkan asetmu, dan bersiaplah untuk simulasi.
       </p>
 
@@ -81,7 +81,7 @@ const flags = [
           to="/game"
           class="bg-accent text-primary text-2xl font-black px-12 py-6 border-[4px] border-accent shadow-[10px_10px_0_0_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all uppercase"
         >
-          Press Start to Play
+          Tekan Tombol Untuk Mulai
         </router-link>
         <div class="mt-8 text-4xl text-accent font-pixel animate-bounce">▼</div>
       </div>
@@ -95,7 +95,7 @@ const flags = [
           data-aos-delay="200"
         >
           <h2 class="font-black text-4xl mb-6 uppercase tracking-tighter">
-            Apa itu Saham Bodong?
+            Apa itu Investasi Bodong?
           </h2>
           <p class="text-xl font-bold leading-snug">
             Investasi ini adalah penipuan berkedok keuntungan besar. Pelaku
