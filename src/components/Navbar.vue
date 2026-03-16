@@ -134,7 +134,7 @@ onUnmounted(() => {
           to="/profile"
           class="relative overflow-hidden h-full flex items-center pl-8 pr-12 hover:bg-accent hover:text-primary transition-colors border-accent group"
         >
-          <span class="relative z-10">About Us</span>
+          <span class="relative z-10">Tentang Kami</span>
           <div
             class="absolute -right-2 top-1/2 -translate-y-1/2 text-[90px] font-pixel opacity-10 group-hover:text-primary group-hover:opacity-30 transition-all leading-none"
           >
@@ -246,11 +246,11 @@ onUnmounted(() => {
         </router-link>
 
         <router-link
-          to="/aboutus"
+          to="/profile"
           @click="toggleMobileMenu"
           class="relative overflow-hidden flex items-center px-6 py-6 border-b-[4px] border-accent hover:bg-accent hover:text-primary transition-colors tracking-tight group"
         >
-          <span class="relative z-10">About Us</span>
+          <span class="relative z-10">Tentang Kami</span>
           <div
             class="absolute right-0 top-1/2 -translate-y-1/2 text-[60px] font-pixel text-accent group-hover:text-primary transition-all leading-none pt-4"
           >
