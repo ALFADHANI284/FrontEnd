@@ -30,8 +30,8 @@ const router = createRouter({
       component: HowToPlay
     },
     {
-      path: '/aboutus',
-      name: 'aboutus',
+      path: '/profile',
+      name: 'profile',
       component: AboutUs
     },
     {
