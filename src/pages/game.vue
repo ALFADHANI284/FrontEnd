@@ -206,10 +206,16 @@ const restartGame = () => {
 
 // === TEKS NARASI KIRI ATAS ===
 const currentNarrative = computed(() => {
-  if (currentChapter.value === 2) return isKamarScene.value
-    ? `Keserakahan mulai membutakan. ${firstName.value} diam-diam menyelinap ke kamar orang tuanya demi mengambil modal.`
-    : `Sesampainya di lorong sekolah, ${firstName.value} menemui Dimas yang sedang gencar mempromosikan saham gaibnya.`
-  return `Di sebuah jalanan perkotaan pada sore hari, langkah ${firstName.value} terhenti oleh rintihan seorang kakek tua...`
+  if (currentChapter.value === 2) {
+    return isKamarScene.value
+      ? `Keserakahan mulai membutakan. ${firstName.value} diam-diam menyelinap ke kamar orang tuanya demi mengambil modal.`
+      : `Sesampainya di lorong sekolah, ${firstName.value} menemui Dimas yang sedang gencar mempromosikan saham gaibnya.`
+  }
+  
+  // CHAPTER 3: Narasi dinamis berdasarkan jalur yang dipilih
+  return hasJoinedBodong.value
+    ? `Sambil mendekap erat uang tabungan keluarga dengan perasaan was-was, langkah buru-buru ${firstName.value} mendadak terhenti oleh rintihan di pinggir jalan...`
+    : `Dengan hati tenang karena terhindar dari investasi bodong, sore itu langkah ${firstName.value} terhenti oleh rintihan seorang kakek tua...`
 })
 
 // === STRUKTUR DIALOG & CERITA ===
@@ -226,37 +232,118 @@ interface Dialog {
   isChoice: boolean;
   choices?: Choice[];
   nextChapter?: number;
+  nextId?: number; // <-- Tambahan untuk merge dialog
 }
 
 const chapter2Dialogs = computed<Dialog[]>(() => [
-  { speaker: 'npc', name: 'Dimas', text: `Woi ${firstName.value}! Tumben lu pagi-pagi nyariin gua. Gimana? Tergiur kan lu liat story profit gua semalam?`, isChoice: false },
-  { speaker: 'npc', name: 'Dimas', text: 'Gua lagi main investasi "CuanKilat". Cukup setor 10 juta, besok langsung cair 30 juta! Lu mau nitip duit ga mumpung slot terakhir?', isChoice: false },
-  {
-    speaker: 'mc', name: firstName.value, text: '', isChoice: true, choices: [
-      { text: '> Wah gila! Boleh deh! (Tapi aku ga punya uang... Ah, bapak nyimpan kas warga 10 juta di kamarnya!)', action: 'join-bodong' },
-      { text: '> Maaf Dim, return segede itu sehari pasti penipuan bodong. Aku mau nabung legal aja.', action: 'reject-bodong' }
-    ]
-  }
+  // Index 0: Sapaan awal
+  { speaker: 'mc', name: firstName.value, text: '', isChoice: true, choices: [
+      { text: '> "Woi Dim! Sibuk amat tuh mata nempel di layar HP, liatin apaan sih?"', nextId: 1 },
+      { text: '> "Eh Dim, kebetulan ketemu. Gue kepikiran soal omongan lo yang kemarin nih."', nextId: 2 }
+  ]},
+  // Index 1 (Opsi A) -> Lanjut ke 3
+  { speaker: 'mc', name: firstName.value, text: 'Woi Dim! Sibuk amat tuh mata nempel di layar HP, liatin apaan sih?', isChoice: false, nextId: 3 },
+  // Index 2 (Opsi B) -> Lanjut ke 3
+  { speaker: 'mc', name: firstName.value, text: 'Eh Dim, kebetulan ketemu. Gue kepikiran soal omongan lo yang kemarin nih.', isChoice: false, nextId: 3 },
+  
+  // Index 3: Respons Dimas 1
+  { speaker: 'npc', name: 'Dimas', text: 'Eh, elo bro! Ini nih, gue lagi mantau grafik. Hijau semua, cuan deres! Gimana, lo udah mikir-mikir soal ajakan gue kemarin?', isChoice: false },
+  
+  // Index 4: Pilihan Merespons Ajakan
+  { speaker: 'mc', name: firstName.value, text: '', isChoice: true, choices: [
+      { text: '> "Wah, beneran bisa cepet untung tuh? Sistemnya gimana emang?"', nextId: 5 },
+      { text: '> "Emang aman, Dim? Gue denger banyak yang bodong kalau nawarin untung cepet."', nextId: 6 }
+  ]},
+  // Index 5 (Opsi A) -> Lanjut ke 7
+  { speaker: 'mc', name: firstName.value, text: 'Wah, beneran bisa cepet untung tuh? Sistemnya gimana emang?', isChoice: false, nextId: 7 },
+  // Index 6 (Opsi B) -> Lanjut ke 7
+  { speaker: 'mc', name: firstName.value, text: 'Emang aman, Dim? Gue denger-denger banyak yang bodong kalau nawarin untung cepet gitu.', isChoice: false, nextId: 7 },
+  
+  // Index 7: Respons Dimas 2
+  { speaker: 'npc', name: 'Dimas', text: 'Aman lah! Ini gue ada "kenalan" orang dalam. Tapi slotnya terbatas bro, kita harus masukin modal bareng-bareng hari ini. Minimal setorannya 10 juta.', isChoice: false },
+  
+  // Index 8: Pilihan Reaksi Nominal
+  { speaker: 'mc', name: firstName.value, text: '', isChoice: true, choices: [
+      { text: '> "Buset, 10 juta?! Duit dari mana gue anak sekolahan begini?!"', nextId: 9 },
+      { text: '> "Gede juga ya modal awalnya... Pasti balik modal kan itu?"', nextId: 10 }
+  ]},
+  // Index 9 (Opsi A) -> Lanjut ke 11
+  { speaker: 'mc', name: firstName.value, text: 'Buset, 10 juta?! Duit dari mana gue anak sekolahan begini?!', isChoice: false, nextId: 11 },
+  // Index 10 (Opsi B) -> Lanjut ke 11
+  { speaker: 'mc', name: firstName.value, text: 'Gede juga ya modal awalnya... Pasti balik modal kan itu?', isChoice: false, nextId: 11 },
+  
+  // Index 11: Respons Dimas 3
+  { speaker: 'npc', name: 'Dimas', text: 'Ya elah, anggap aja ini jalan pintas buat masa depan lo. Pinjem siapa kek dulu, minggu depan pas profitnya cair, lo balikin utuh plus lo dapet untungnya! Deal ya?', isChoice: false },
+  
+  // Index 12: BRANCHING UTAMA
+  { speaker: 'mc', name: firstName.value, text: '', isChoice: true, choices: [
+      { text: '> (Terima) "Oke, gue ikut. Tapi beri gue waktu, gue mau ambil tabungan Bapak di rumah..."', action: 'join-bodong' },
+      { text: '> (Tolak) "Sori Dim, duit 10 juta gede banget. Gue mending nabung pelan-pelan aja deh yang legal."', action: 'reject-bodong' }
+  ]}
 ])
 
 const kamarDialogs = computed<Dialog[]>(() => [
-  { speaker: 'mc', name: `Pikiran ${firstName.value}`, text: 'Bapak dan Ibu sedang pergi bekerja... Di atas meja ini benar ada amplop uang kas warga.', isChoice: false },
-  { speaker: 'mc', name: `Pikiran ${firstName.value}`, text: 'Maafkan aku, Pak. Aku cuma pinjam sehari kok. Besok pas cair 30 juta, langsung aku kembalikan utuh tanpa ketahuan!', isChoice: false, nextChapter: 3 }
+  // Index 0: Observasi awal
+  { speaker: 'mc', name: `Pikiran ${firstName.value}`, text: 'Kondisi aman... Bapak sama Ibu belum pulang kerja. Amplop cokelat tebal itu beneran masih ada di meja.', isChoice: false },
+  
+  // Index 1: Pergolakan batin
+  { speaker: 'mc', name: `Pikiran ${firstName.value}`, text: 'Gila, tanganku sampai gemetar. Ini kan uang tabungan pribadi keluarga. Kalau ketahuan hilang, Bapak dan Ibu pasti hancur banget.', isChoice: false },
+  
+  // Index 2: Pilihan rasa (Flavor text - rasionalisasi)
+  { speaker: 'mc', name: firstName.value, text: '', isChoice: true, choices: [
+      { text: '> "Tapi kata Dimas besok cair 30 juta. Aku bisa kembalikan utuh 10 jutanya sebelum Bapak sadar..."', nextId: 3 },
+      { text: '> "Duh, dosa nggak ya? Ah, ini kan niatnya investasi. Nanti untungnya bisa buat bantu keluarga juga!"', nextId: 4 }
+  ]},
+  
+  // Index 3 (Opsi A) -> Lanjut ke 5
+  { speaker: 'mc', name: `Pikiran ${firstName.value}`, text: 'Tapi kata Dimas besok cair 30 juta. Aku bisa kembalikan utuh 10 jutanya sebelum Bapak sadar uangnya dipinjam.', isChoice: false, nextId: 5 },
+  
+  // Index 4 (Opsi B) -> Lanjut ke 5
+  { speaker: 'mc', name: `Pikiran ${firstName.value}`, text: 'Duh, dosa nggak ya? Ah, ini kan niatnya investasi. Nanti untungnya bisa buat bantu keluarga juga!', isChoice: false, nextId: 5 },
+  
+  // Index 5: Keputusan bulat & pindah chapter
+  { speaker: 'mc', name: `Pikiran ${firstName.value}`, text: 'Maafkan aku ya, Pak. Aku cuma pinjam semalam kok. Besok pasti kembali lipat ganda! Bismillah, bismillah...', isChoice: false, nextChapter: 3 }
 ])
 
 const chapter3Dialogs = computed<Dialog[]>(() => [
-  { speaker: 'npc', name: 'Kakek Tua', text: 'Tolong kakek, Nak... Sudah berhari-hari kakek tidak makan. Tubuh kakek gemetar dan sakit sekali...', isChoice: false },
-  { speaker: 'mc', name: `Pikiran ${firstName.value}`, text: 'Kasihan sekali kakek ini...', isChoice: false },
+  // Index 0: Permintaan Kakek
+  { speaker: 'npc', name: 'Kakek Tua', text: 'Tolong kakek, Nak... Sudah berhari-hari kakek tidak makan. Tubuh kakek gemetar dan sakit sekali... rasanya pandangan kakek sudah mulai gelap...', isChoice: false },
+  
+  // Index 1: Reaksi awal MC
+  { speaker: 'mc', name: `Pikiran ${firstName.value}`, text: 'Astaga... Kasihan sekali kakek ini, wajahnya pucat banget dan napasnya berat...', isChoice: false },
+  
+  // Index 2: Monolog Batin Dinamis (Menentukan tingkat stres pemain)
+  { 
+    speaker: 'mc', 
+    name: `Pikiran ${firstName.value}`, 
+    text: hasJoinedBodong.value 
+      ? 'Gimana ini?! Uang di tasku ini pas 10 juta tabungan keluarga. Kalau aku kasih ke kakek ini walau selembar, setoran ke Dimas batal dan aku nggak bisa balikin uang Bapak besok! Keluargaku bisa hancur! Tapi... kakek ini sekarat...' 
+      : 'Syukurlah aku nggak jadi ikut investasi gaib si Dimas. Aku bawa sisa uang tabunganku sendiri. Kakek ini darurat banget kondisinya...', 
+    isChoice: false 
+  },
+  
+  // Index 3: Pilihan Percabangan Ekstrem
   {
     speaker: 'mc', name: firstName.value, text: '', isChoice: true, choices: hasJoinedBodong.value ? [
-      // KONDISI 1: Pemain IKUT Investasi Bodong (Uang Curian)
-      { text: '> (Beri Uang Curian) Ini Kek, ada sedikit uang untuk makan...', action: 'secret-end' }, // Uang dicuri, tapi disedekahkan
-      { text: '> (Abaikan Kakek) Maaf Kek, uang ini ngepas mau disetor ke Dimas!', action: 'bad-end' }    // Uang dicuri untuk foya-foya (Ponzi)
+      // KONDISI 1: Pemain IKUT Investasi Bodong (Uang Curian) - 3 PILIHAN DILEMA
+      { 
+        text: '> "Maaf Kek, sungguh saya gak bisa!" (Uang ini penentu nasib! Kalau gak kujadikan 30 juta hari ini, masa depan keluargaku yang hancur. Maafin aku, Kek!)', 
+        action: 'bad-end' 
+      },
+      { 
+        text: '> "Minggir, Kek. Saya lagi buru-buru!" (Waktu adalah uang. Kalau telat nyetor ke Dimas, slot profit 30 juta keburu diambil orang lain!)', 
+        action: 'bad-end' 
+      },
+      { 
+        text: '> "Ini Kek..." (Persetan dengan investasi Dimas! Aku siap dimarahi Bapak habis-habisan karena tabungan keluarga berkurang, yang penting nyawa kakek ini selamat.)', 
+        action: 'secret-end' 
+      },
     ] : [
       // KONDISI 2: Pemain MENOLAK Investasi Bodong (Uang Halal/Aman)
-      // Apa pun pilihannya di sini, ujungnya tetap GOOD ENDING karena pondasinya sudah benar.
-      { text: '> (Beri Uang Tabungan Legal) Ini Kek, ambil saja tabunganku. Kakek lebih butuh.', action: 'good-end' },
-      { text: '> (Abaikan Kakek) Maaf Kek, aku harus menghemat uangku.', action: 'good-end' }
+      { 
+        text: '> "Ini Kek, beli makan yang enak ya. Kakek jauh lebih butuh uang ini daripada aku."', 
+        action: 'good-end' 
+      }
     ]
   }
 ])
@@ -324,14 +411,27 @@ const nextDialog = (choice?: Choice) => {
     if (choice.action === 'secret-end') return triggerEnding('secret')
   }
 
-  // Lanjut Dialog Biasa
+  // Cek pindah chapter (Dialog yang punya nextChapter)
   if (currentDialog.value?.nextChapter) {
     triggerNextChapter(currentDialog.value.nextChapter)
     return
   }
 
-  if (choice && choice.nextId !== undefined) currentDialogIndex.value = choice.nextId
-  else currentDialogIndex.value++
+  // --- LOGIKA YANG TERLEWAT: Loncatan Merge Path ---
+  // Jika ini BUKAN pilihan (tombol Lanjut biasa), TAPI dialog tersebut punya nextId
+  if (!choice && currentDialog.value?.nextId !== undefined) {
+    currentDialogIndex.value = currentDialog.value.nextId;
+    return;
+  }
+  // -------------------------------------------------
+
+  // Eksekusi pindah index berdasarkan pilihan yang diklik
+  if (choice && choice.nextId !== undefined) {
+    currentDialogIndex.value = choice.nextId
+  } else {
+    // Increment default kalau tidak ada kondisi lompat sama sekali
+    currentDialogIndex.value++
+  }
 }
 </script>
 
