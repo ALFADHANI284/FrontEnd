@@ -161,8 +161,8 @@ const currentBackground = computed(() => {
 })
 
 const currentNpc = computed(() => {
-  if (currentChapter.value === 2) return isKamarScene.value ? '/Dompet Kamara.gif' : '/Teman_Char.png'
-  return '/Kakek_Char.png'
+  if (currentChapter.value === 2) return isKamarScene.value ? '/Dompet Kamara.gif' : '/Teman_Char2.gif'
+  return '/Kakek_Char2.gif'
 })
 
 // === LOGIKA VIDEO ===
@@ -553,7 +553,7 @@ const nextDialog = (choice?: Choice) => {
     </div>
 
     <div v-if="gameState === 'dialog' && currentDialog" class="absolute inset-0 z-20">
-      <img v-if="currentDialog.speaker === 'mc'" :src="'/MC_Char.png'"
+      <img v-if="currentDialog.speaker === 'mc'" :src="'/MC_Char_Diam_Angin.gif'"
         class="absolute bottom-[5%] lg:bottom-[250px] left-2 lg:left-20 w-56 lg:w-80 pixelated drop-shadow-[0_10px_0_rgba(0,0,0,0.5)]" />
       <img v-if="currentDialog.speaker === 'npc' && currentNpc" :src="currentNpc"
         class="absolute bottom-[5%] lg:bottom-[250px] right-2 lg:right-20 pixelated drop-shadow-[0_10px_0_rgba(0,0,0,0.5)]"
