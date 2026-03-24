@@ -582,6 +582,19 @@ const nextDialog = (choice?: Choice) => {
           class="font-pixel mt-4 bg-primary text-accent px-8 py-4 lg:px-12 lg:py-6 border-[4px] lg:border-[6px] border-accent shadow-[6px_6px_0_0_#2C3E50] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all text-xl lg:text-3xl uppercase tracking-widest">
           MAIN LAGI ↻
         </button>
+        <button
+          @click="handleGetCertificate"
+          :disabled="loadingCert"
+          class="font-pixel mt-4 bg-primary text-accent px-8 py-4 lg:px-12 lg:py-6 border-[4px] lg:border-[6px] border-accent shadow-[6px_6px_0_0_#2C3E50] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all text-xl lg:text-3xl uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-x-0 disabled:translate-y-0 disabled:shadow-[6px_6px_0_0_#2C3E50]">
+          {{ loadingCert ? 'MEMPROSES...' : 'DAPATKAN SERTIFIKAT!' }}
+        </button>
+        <!-- STRUK SERTIFIKAT -->
+        <CertificateReceipt
+          v-if="showReceipt && certificate"
+          :certificate="certificate"
+          :cert-id="certId!"
+          @close="showReceipt = false"
+        />
       </div>
     </div>
 
