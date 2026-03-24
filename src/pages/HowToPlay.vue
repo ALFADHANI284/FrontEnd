@@ -232,96 +232,13 @@ onMounted(() => {
                 {{ step.desc }}
               </p>
 
-              <div class="shrink-0 border-2 border-dashed border-secondary/40 p-2 self-center sm:self-start bg-primary scene-bg">
-                <svg v-if="step.icon === 'book'" width="80" height="64" viewBox="0 0 20 16" style="image-rendering: pixelated;">
-                  <rect x="1" y="11" width="18" height="2" fill="var(--color-secondary)" opacity="0.7"/>
-                  <rect x="1" y="13" width="2" height="3" fill="var(--color-secondary)" opacity="0.5"/>
-                  <rect x="17" y="13" width="2" height="3" fill="var(--color-secondary)" opacity="0.5"/>
-                  <rect x="4" y="7" width="5" height="4" fill="var(--color-secondary)" opacity="0.9"/>
-                  <rect x="9" y="7" width="5" height="4" fill="var(--color-secondary)" opacity="0.7"/>
-                  <rect x="9" y="7" width="1" height="4" fill="var(--color-secondary)"/>
-                  <rect x="5" y="8" width="3" height="1" fill="var(--color-primary, #1a1a2e)" opacity="0.5"/>
-                  <rect x="5" y="9" width="2" height="1" fill="var(--color-primary, #1a1a2e)" opacity="0.5"/>
-                  <rect x="10" y="8" width="3" height="1" fill="var(--color-primary, #1a1a2e)" opacity="0.5"/>
-                  <rect x="10" y="9" width="2" height="1" fill="var(--color-primary, #1a1a2e)" opacity="0.5"/>
-                  <rect x="14" y="4" width="3" height="1" fill="var(--color-secondary)"/>
-                  <rect x="15" y="5" width="1" height="6" fill="var(--color-secondary)" opacity="0.7"/>
-                  <rect x="13" y="5" width="1" height="1" fill="var(--color-secondary)" opacity="0.3"/>
-                  <rect x="12" y="6" width="1" height="1" fill="var(--color-secondary)" opacity="0.2"/>
-                  <rect x="2" y="2" width="1" height="1" fill="var(--color-secondary)" opacity="0.6"/>
-                  <rect x="7" y="1" width="1" height="1" fill="var(--color-secondary)" opacity="0.4"/>
-                </svg>
-                <svg v-if="step.icon === 'rocket'" width="80" height="64" viewBox="0 0 20 16" style="image-rendering: pixelated;">
-                  <rect x="3" y="2" width="14" height="9" fill="var(--color-secondary)" opacity="0.8"/>
-                  <rect x="4" y="3" width="12" height="7" fill="var(--color-primary, #1a1a2e)"/>
-                  <rect x="9" y="4" width="2" height="1" fill="var(--color-secondary)"/>
-                  <rect x="9" y="5" width="2" height="3" fill="var(--color-secondary)" opacity="0.8"/>
-                  <rect x="8" y="7" width="1" height="1" fill="var(--color-secondary)" opacity="0.6"/>
-                  <rect x="11" y="7" width="1" height="1" fill="var(--color-secondary)" opacity="0.6"/>
-                  <rect x="9" y="8" width="1" height="1" fill="var(--color-secondary)" opacity="0.5"/>
-                  <rect x="10" y="8" width="1" height="1" fill="var(--color-secondary)" opacity="0.5"/>
-                  <rect x="9" y="11" width="2" height="2" fill="var(--color-secondary)" opacity="0.6"/>
-                  <rect x="7" y="13" width="6" height="1" fill="var(--color-secondary)" opacity="0.7"/>
-                  <rect x="5" y="4" width="1" height="1" fill="var(--color-secondary)" opacity="0.5"/>
-                  <rect x="14" y="6" width="1" height="1" fill="var(--color-secondary)" opacity="0.4"/>
-                  <rect x="6" y="8" width="1" height="1" fill="var(--color-secondary)" opacity="0.3"/>
-                </svg>
-                <svg v-if="step.icon === 'profile'" width="80" height="64" viewBox="0 0 20 16" style="image-rendering: pixelated;">
-                  <rect x="3" y="2" width="14" height="10" fill="var(--color-secondary)" opacity="0.8"/>
-                  <rect x="4" y="3" width="12" height="8" fill="var(--color-primary, #1a1a2e)"/>
-                  <rect x="5" y="4" width="4" height="4" fill="var(--color-secondary)" opacity="0.6"/>
-                  <rect x="6" y="5" width="2" height="2" fill="var(--color-secondary)"/>
-                  <rect x="10" y="5" width="5" height="1" fill="var(--color-secondary)" opacity="0.7"/>
-                  <rect x="10" y="7" width="3" height="1" fill="var(--color-secondary)" opacity="0.5"/>
-                  <rect x="9" y="0" width="2" height="2" fill="var(--color-secondary)" opacity="0.5"/>
-                  <rect x="8" y="1" width="4" height="1" fill="var(--color-secondary)" opacity="0.3"/>
-                  <rect x="15" y="10" width="1" height="5" fill="var(--color-secondary)" opacity="0.7"/>
-                  <rect x="15" y="15" width="1" height="1" fill="var(--color-secondary)" opacity="0.4"/>
-                  <rect x="14" y="10" width="3" height="1" fill="var(--color-secondary)" opacity="0.5"/>
-                </svg>
-                <svg v-if="step.icon === 'chart'" width="80" height="64" viewBox="0 0 20 16" style="image-rendering: pixelated;">
-                  <rect x="2" y="1" width="16" height="11" fill="var(--color-secondary)" opacity="0.7"/>
-                  <rect x="3" y="2" width="14" height="9" fill="var(--color-primary, #1a1a2e)"/>
-                  <rect x="5" y="7" width="2" height="3" fill="var(--color-secondary)" opacity="0.8"/>
-                  <rect x="8" y="5" width="2" height="5" fill="var(--color-secondary)"/>
-                  <rect x="11" y="4" width="2" height="6" fill="var(--color-secondary)" opacity="0.9"/>
-                  <rect x="14" y="6" width="2" height="4" fill="var(--color-secondary)" opacity="0.7"/>
-                  <rect x="4" y="10" width="12" height="1" fill="var(--color-secondary)" opacity="0.5"/>
-                  <rect x="4" y="3" width="1" height="8" fill="var(--color-secondary)" opacity="0.5"/>
-                  <rect x="6" y="6" width="1" height="1" fill="var(--color-secondary)" opacity="0.4"/>
-                  <rect x="9" y="4" width="1" height="1" fill="var(--color-secondary)" opacity="0.4"/>
-                  <rect x="12" y="3" width="1" height="1" fill="var(--color-secondary)" opacity="0.4"/>
-                  <rect x="7" y="12" width="2" height="3" fill="var(--color-secondary)" opacity="0.5"/>
-                  <rect x="11" y="12" width="2" height="3" fill="var(--color-secondary)" opacity="0.5"/>
-                </svg>
-                <svg v-if="step.icon === 'trophy'" width="80" height="64" viewBox="0 0 20 16" style="image-rendering: pixelated;">
-                  <rect x="7" y="1" width="6" height="1" fill="var(--color-secondary)"/>
-                  <rect x="6" y="2" width="8" height="5" fill="var(--color-secondary)"/>
-                  <rect x="5" y="2" width="1" height="3" fill="var(--color-secondary)" opacity="0.7"/>
-                  <rect x="14" y="2" width="1" height="3" fill="var(--color-secondary)" opacity="0.7"/>
-                  <rect x="7" y="7" width="6" height="2" fill="var(--color-secondary)" opacity="0.9"/>
-                  <rect x="8" y="9" width="4" height="2" fill="var(--color-secondary)" opacity="0.7"/>
-                  <rect x="6" y="11" width="8" height="1" fill="var(--color-secondary)"/>
-                  <rect x="5" y="12" width="10" height="1" fill="var(--color-secondary)" opacity="0.8"/>
-                  <rect x="9" y="3" width="2" height="1" fill="var(--color-primary, #1a1a2e)"/>
-                  <rect x="10" y="2" width="1" height="1" fill="var(--color-primary, #1a1a2e)"/>
-                  <rect x="8" y="4" width="4" height="1" fill="var(--color-primary, #1a1a2e)"/>
-                  <rect x="9" y="5" width="2" height="1" fill="var(--color-primary, #1a1a2e)"/>
-                  <rect x="2" y="2" width="1" height="1" fill="var(--color-secondary)" opacity="0.6"/>
-                  <rect x="3" y="1" width="1" height="1" fill="var(--color-secondary)" opacity="0.4"/>
-                  <rect x="17" y="3" width="1" height="1" fill="var(--color-secondary)" opacity="0.6"/>
-                  <rect x="16" y="2" width="1" height="1" fill="var(--color-secondary)" opacity="0.4"/>
-                  <rect x="1" y="8" width="1" height="1" fill="var(--color-secondary)" opacity="0.3"/>
-                  <rect x="18" y="7" width="1" height="1" fill="var(--color-secondary)" opacity="0.3"/>
-                  <rect x="3" y="14" width="14" height="1" fill="var(--color-secondary)" opacity="0.3"/>
-                </svg>
-              </div>
+              
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-10 flex items-center justify-center gap-2">
+      <!-- <div class="mt-10 flex items-center justify-center gap-2">
         <span v-for="(step, i) in steps" :key="i"
               class="font-pixel text-xs text-secondary opacity-50 flex items-center gap-1">
           <span class="inline-block w-3 h-3 border border-secondary"
@@ -329,7 +246,7 @@ onMounted(() => {
           <span v-if="i < steps.length - 1" class="inline-block w-4 h-px bg-secondary opacity-40"></span>
         </span>
       </div>
-      <p class="text-center font-pixel text-secondary text-xs opacity-40 mt-2 tracking-widest">[ SELECT A STEP ]</p>
+      <p class="text-center font-pixel text-secondary text-xs opacity-40 mt-2 tracking-widest">[ SELECT A STEP ]</p> -->
 
     </div>
   </section>
