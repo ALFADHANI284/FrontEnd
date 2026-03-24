@@ -72,7 +72,7 @@ const bgms = {
 
 // Inisialisasi Audio saat halaman dimuat
 onMounted(() => {
-  bgms.ch1.value = new Audio('/bgm-chapter-1.mp3');
+  bgms.ch1.value = new Audio('/bgm-chapter-2-part-1.mp3');
   bgms.ch1.value.loop = true;
 
   // Ini yang lorong sekolah (tanpa bgm- sesuai nama filemu)
@@ -193,7 +193,6 @@ const submitName = () => {
 
 // === DINAMISASI ASSETS BERDASARKAN CHAPTER ===
 const currentBackground = computed(() => {
-  if (currentChapter.value === 1) return '/background-rumah.png'
   if (currentChapter.value === 2) return isKamarScene.value ? '/background-kamar.png' : '/background-sekolah.gif'
   return '/background-kota.gif'
 })
@@ -206,13 +205,11 @@ const currentNpc = computed(() => {
 // === LOGIKA VIDEO ===
 const currentVideo = computed(() => {
   if (gameState.value === 'ending-video') {
-    if (endingType.value === 'good') return '/ending-good.mp4'
-    if (endingType.value === 'bad') return '/ending-bad.mp4'
-    return '/ending-secret.mp4'
+    if (endingType.value === 'good') return '/ending-good.webm'
+    if (endingType.value === 'bad') return '/ending-bad.webm'
+    return '/ending-secret.webm'
   }
-  if (currentChapter.value === 1) return '/prolog-chapter-1.mp4'
-  if (currentChapter.value === 2) return '/prolog-chapter-2.mp4'
-  return '/prolog-chapter-3.mp4'
+  if (currentChapter.value === 1) return '/prolog-chapter-1.webm'
 })
 
 // ALUR SETELAH VIDEO SELESAI
@@ -439,8 +436,11 @@ const triggerNextChapter = (nextChapNum: number) => {
   setTimeout(() => {
     currentChapter.value = nextChapNum
     isKamarScene.value = false
-    gameState.value = 'video'
-    currentDialogIndex.value = 0
+    // --- REVISI MENGHILANGKAN VIDEO CH 2 & 3 ---
+    // Karena kita sudah tidak punya video prolog untuk Ch 2 dan 3,
+    // langsung atur gameState ke 'explore' alih-alih 'video'.
+    gameState.value = 'explore' 
+    // -------------------------------------------
     mcLeftPos.value = 10
 
     setTimeout(() => { isChapterTransitioning.value = false }, 1000)
@@ -564,7 +564,7 @@ const nextDialog = (choice?: Choice) => {
     </div>
 
     <div v-if="gameState === 'ending-video'" class="absolute inset-0 z-50 flex items-center justify-center bg-black/95">
-      <video :src="currentVideo" autoplay playsinline @ended="onVideoEnded"
+      <video v-if="!showRestartMenu" :src="currentVideo" autoplay playsinline @ended="onVideoEnded"
         class="w-full h-full max-w-5xl object-contain"></video>
 
       <button v-if="!showRestartMenu" @click="skipVideo"

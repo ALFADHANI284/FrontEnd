@@ -46,7 +46,7 @@ const teamMembers = ref([
   { 
     name: 'Saladin', 
     role: 'Content Writer',
-    avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Gamma'
+    avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Wyatt'
   },
   { 
     name: 'Rangga', 
