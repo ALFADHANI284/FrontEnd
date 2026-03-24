@@ -194,8 +194,8 @@ const submitName = () => {
 // === DINAMISASI ASSETS BERDASARKAN CHAPTER ===
 const currentBackground = computed(() => {
   if (currentChapter.value === 1) return '/background-rumah.png'
-  if (currentChapter.value === 2) return isKamarScene.value ? '/background-kamar.png' : '/background-sekolah.png'
-  return '/background-kota.png'
+  if (currentChapter.value === 2) return isKamarScene.value ? '/background-kamar.png' : '/background-sekolah.gif'
+  return '/background-kota.gif'
 })
 
 const currentNpc = computed(() => {
