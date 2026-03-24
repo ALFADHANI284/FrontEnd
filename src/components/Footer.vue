@@ -73,27 +73,21 @@ onUnmounted(() => {
         data-aos-delay="200"
       >
         <a
-          href="/p"
+          href="/"
           class="hover:bg-accent hover:text-primary px-3 py-1 border-[3px] border-transparent hover:border-accent transition-all"
-          >About Us</a
+          >Beranda</a
         >
         <span class="text-accent hidden md:block">✦</span>
         <a
-          href="#"
+          href="/carabermain"
           class="hover:bg-accent hover:text-primary px-3 py-1 border-[3px] border-transparent hover:border-accent transition-all"
-          >Catalog</a
+          >Cara Bermain</a
         >
         <span class="text-accent hidden md:block">✦</span>
         <a
-          href="#"
+          href="/profile"
           class="hover:bg-accent hover:text-primary px-3 py-1 border-[3px] border-transparent hover:border-accent transition-all"
-          >Privacy</a
-        >
-        <span class="text-accent hidden md:block">✦</span>
-        <a
-          href="#"
-          class="hover:bg-accent hover:text-primary px-3 py-1 border-[3px] border-transparent hover:border-accent transition-all"
-          >Terms</a
+          >Tentang Kami</a
         >
       </div>
 
@@ -107,7 +101,7 @@ onUnmounted(() => {
         >
           © 2026 Doyan Ngoding. <br class="md:hidden" />
           ALL RIGHTS RESERVED. <br />
-          <span class="inline-block mt-2">Lorem Ipsum</span>
+          <span class="inline-block mt-2">>>------<<</span>
         </p>
       </div>
     </div>
