@@ -56,7 +56,7 @@ onUnmounted(() => {
     >
       <div class="flex flex-col items-center gap-3" data-aos="zoom-in">
         <h2
-          class="font-pixel text-5xl md:text-6xl lg:text-7xl tracking-tighter uppercase leading-none"
+          class="font-pixel text-4xl md:text-6xl lg:text-7xl tracking-tighter uppercase leading-none"
         >
           FUNDIVEST
         </h2>
