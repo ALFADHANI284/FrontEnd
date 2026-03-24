@@ -34,6 +34,27 @@ const flags = [
     desc: "Mendesak transfer cepat dengan kuota fiktif.",
   },
 ];
+
+const modules = [
+  {
+    icon: "🛡️", // Kamu bisa ganti dengan path gambar .webp milikmu nanti
+    title: "Tameng Legalitas",
+    badge: "PRINSIP 2L",
+    desc: "Pastikan platform terdaftar di OJK. Jika profitnya tidak logis, itu adalah jebakan musuh!",
+  },
+  {
+    icon: "📊",
+    title: "Radar Risiko",
+    badge: "GAYA MAIN",
+    desc: "Ketahui statusmu: Konservatif (Aman), Moderat (Seimbang), atau Agresif (High Risk, High Return).",
+  },
+  {
+    icon: "⚔️",
+    title: "Jurus Diversifikasi",
+    badge: "SEBAR ASET",
+    desc: "Jangan taruh semua modal di satu tempat. Pecah formasimu untuk meminimalisir damage saat market merah.",
+  },
+];
 </script>
 
 <template>
@@ -67,9 +88,7 @@ const flags = [
         data-aos-delay="400"
         class="text-xl md:text-2xl max-w-2xl font-bold leading-tight mb-12 text-accent opacity-90"
       >
-        Dunia finansial sedang diserang oleh ancaman
-        <span class="bg-accent text-primary">Investasi Bodong</span>. Pelajari
-        polanya, selamatkan asetmu, dan bersiaplah untuk simulasi.
+        Pelajari strategi investasi yang legal, baik dan benar. Mulai <u>petualangan game finansial</u> yang memberikan dampak bagi anda!
       </p>
 
       <div
@@ -81,7 +100,7 @@ const flags = [
           to="/game"
           class="bg-accent text-primary text-2xl font-black px-12 py-6 border-[4px] border-accent shadow-[10px_10px_0_0_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all uppercase"
         >
-          Tekan Untuk Mulai!
+          Mulai Petualangan!
         </router-link>
         <div class="mt-8 text-4xl text-accent font-pixel animate-bounce">▼</div>
       </div>
@@ -95,11 +114,10 @@ const flags = [
           data-aos-delay="200"
         >
           <h2 class="font-black text-4xl mb-6 uppercase tracking-tighter">
-            Apa itu Investasi Bodong?
+            Level Up Keuanganmu:
           </h2>
           <p class="text-xl font-bold leading-snug">
-            Investasi ini adalah penipuan berkedok keuntungan besar. Pelaku
-            menawarkan saham fiktif tanpa izin resmi OJK untuk menjerat asetmu.
+            Tinggalkan kebiasaan ikut-ikutan (FOMO) dan jebakan investasi bodong. 
           </p>
         </div>
         <div
@@ -107,8 +125,52 @@ const flags = [
           data-aos="fade-left"
           data-aos-delay="400"
         >
-          "Uangmu tidak diputar untuk bisnis nyata, melainkan untuk membayar
-          anggota lama (Skema Ponzi)."
+          "Investasi Cerdas, Bukan Asal Tebak!"
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-6 py-24 border-b-[4px] border-accent">
+      <div 
+        class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16" 
+        data-aos="fade-up"
+      >
+        <div class="max-w-2xl">
+          <h2 class="font-black text-4xl uppercase tracking-tighter mb-4">
+            Basecamp Pemula
+          </h2>
+          <p class="text-xl font-bold opacity-80 leading-snug">
+            Kuasai 3 <span class="bg-accent text-primary px-1">Skill Dasar</span> ini sebelum masuk ke arena investasi sesungguhnya agar modalmu tidak hangus!
+          </p>
+        </div>
+        <div class="mt-6 md:mt-0 font-pixel text-accent text-sm md:text-base animate-pulse">
+          [ 3 MODULES UNLOCKED ]
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div 
+          v-for="(mod, index) in modules" 
+          :key="index"
+          data-aos="fade-up" 
+          :data-aos-delay="200 + (index * 200)"
+          class="bg-primary p-8 border-[4px] border-accent shadow-[8px_8px_0_0_#2C3E50] hover:translate-x-2 hover:translate-y-2 hover:shadow-none transition-all cursor-pointer group flex flex-col h-full"
+        >
+          <div class="text-6xl mb-6 grayscale transition-all transform group-hover:scale-110 origin-left">
+            {{ mod.icon }}
+          </div>
+          <div class="mb-4">
+            <span class="font-pixel text-[10px] bg-accent text-primary px-3 py-1 uppercase tracking-widest border-[2px] border-primary">
+              {{ mod.badge }}
+            </span>
+          </div>
+          <h3 class="font-black text-2xl uppercase mb-3">{{ mod.title }}</h3>
+          <p class="font-bold opacity-90 leading-relaxed flex-grow">{{ mod.desc }}</p>
+          
+          <div class="mt-8 border-t-[4px] border-dashed border-accent pt-4 opacity-0 group-hover:opacity-100 transition-opacity font-black uppercase text-sm flex justify-between items-center">
+            <span>Pelajari Skill</span>
+            <span class="font-pixel">-></span>
+          </div>
         </div>
       </div>
     </section>
