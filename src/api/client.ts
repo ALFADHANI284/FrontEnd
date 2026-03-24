@@ -1,7 +1,7 @@
 import { Api } from './generated'
 
 export const api = new Api({
-  baseUrl: 'http://localhost:8080/api/v1',
+  baseUrl: 'https://api.fundivest.xyz/api/v1',
 })
 
 export type {
