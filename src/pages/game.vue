@@ -2,6 +2,16 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
 
+import { useSession } from '../composables/useSession'
+const { sessionId, initSession, finishChapter } = useSession()
+import { useCertificate } from '../composables/useCertificate'
+const { generateCertificate, status, certId } = useCertificate()
+import { useVerify } from '../composables/useVerify'
+const { certificate, verify } = useVerify()
+
+import CertificateReceipt from '../components/CertificateReceipt.vue'
+const showReceipt = ref(false)
+
 const router = useRouter()
 
 // === PENGAMAN PROGRESS (MODAL CUSTOM) ===
@@ -127,6 +137,29 @@ watch([gameState, currentChapter, isKamarScene], () => {
   })
 })
 
+// Status pembuatan sertifikat
+const loadingCert = ref(false)
+
+// Pantau proses pembuatan sertifikat
+watch(status, async (s) => {
+  if (s === 'done' && certId.value) {
+    await verify(certId.value)
+    showReceipt.value = true
+    loadingCert.value = false
+  }
+})
+
+async function handleGetCertificate() {
+  if (certId.value && status.value === 'done') {
+    showReceipt.value = true
+    loadingCert.value = false
+    return
+  }
+
+  loadingCert.value = true
+  await generateCertificate(sessionId.value!)
+}
+
 // === DATA PEMAIN ===
 const fullName = ref('')
 const firstName = computed<string>(() => {
@@ -139,6 +172,11 @@ const submitName = () => {
     alert('Hei! Masukkan namamu dulu ya sebelum mulai!')
     return
   }
+
+  // Inisialisasi sesi ke backend
+  ;(async () => {
+    await initSession({ course_id: 'Permainan Finansial Fundivest', name: fullName.value })
+  })()
 
   // Memulai Chapter 1
   currentChapter.value = 1
@@ -182,6 +220,15 @@ const onVideoEnded = () => {
   if (gameState.value === 'ending-video') {
     showRestartMenu.value = true
   } else if (currentChapter.value === 1) {
+    // Kirim progress chapter ke backend
+    // As of right frontend akan fire-and-forget
+    // agar tidak memblokir alur game terlalu lama.
+    // Karena sudah menamatkan chapter 1 maka
+    // finishChapter(1)
+    ;(async () => {
+      await finishChapter(1)
+    })()   
+    
     // Jika Video Chapter 1 tamat, langsung transisi ke Chapter 2 (Tidak ada mode explore di Ch1)
     triggerNextChapter(2)
   } else {
@@ -194,6 +241,11 @@ const skipVideo = () => {
   if (gameState.value === 'ending-video') {
     showRestartMenu.value = true
   } else if (currentChapter.value === 1) {
+    // Kirim progress chapter ke backend
+    ;(async () => {
+      await finishChapter(1)
+    })()
+    
     triggerNextChapter(2) // Skip Ch1 langsung menuju Ch2
   } else {
     gameState.value = 'explore'
@@ -396,6 +448,10 @@ const triggerNextChapter = (nextChapNum: number) => {
 }
 
 const triggerEnding = (type: 'good' | 'bad' | 'secret') => {
+  ;(async () => {
+    await finishChapter(3)
+  })()
+  
   endingType.value = type
   gameState.value = 'ending-video'
 }
@@ -413,6 +469,11 @@ const nextDialog = (choice?: Choice) => {
     }
     if (choice.action === 'reject-bodong') {
       hasJoinedBodong.value = false
+      
+      ;(async () => {
+        await finishChapter(2)
+      })()
+      
       triggerNextChapter(3)
       return
     }
@@ -423,6 +484,10 @@ const nextDialog = (choice?: Choice) => {
 
   // Cek pindah chapter (Dialog yang punya nextChapter)
   if (currentDialog.value?.nextChapter) {
+    ;(async () => {
+      await finishChapter(2)
+    })()
+    
     triggerNextChapter(currentDialog.value.nextChapter)
     return
   }
