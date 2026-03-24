@@ -4,6 +4,7 @@ import Game1 from '../pages/Scene.vue'
 import Game from '../pages/game.vue'
 import HowToPlay from '../pages/HowToPlay.vue'
 import AboutUs from '../pages/AboutUs.vue'
+import VerifyPage from '../pages/Verify.vue'
 import NotFound from '../pages/NotFound.vue'
 
 const router = createRouter({
@@ -33,6 +34,13 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: AboutUs
+    },
+    {
+      path: '/verify/:certId',
+      component: VerifyPage,
+      meta: { 
+        hideNavFooter: true 
+      }
     },
     {
       path: '/:pathMatch(.*)*',
