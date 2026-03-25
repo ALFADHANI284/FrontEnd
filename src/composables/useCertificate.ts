@@ -1,16 +1,14 @@
 import { ref } from 'vue'
 import { api } from '../api/client'
 
-const POLL_INTERVAL_MS = 3000
-const POLL_MAX_ATTEMPTS = 20
+const SSE_BASE = 'https://api.fundivest.xyz/api/v1'
 
 export function useCertificate() {
   const certId = ref<string | null>(null)
-  const status = ref<'pending' | 'done' | 'failed' | null>(null)
+  const status = ref<'processing' | 'done' | 'failed' | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
-  let pollTimer: ReturnType<typeof setInterval> | null = null
-  let pollAttempts = 0
+  let eventSource: EventSource | null = null
 
   async function generateCertificate(sessionId: string): Promise<string> {
     loading.value = true
@@ -21,8 +19,8 @@ export function useCertificate() {
       if (!id) throw new Error('certificate_id tidak ada di response')
 
       certId.value = id
-      status.value = 'pending'
-      startPolling()
+      status.value = 'processing'
+      startSSE(id)
       return id
     } catch (e) {
       error.value = (e as Error).message
@@ -32,34 +30,29 @@ export function useCertificate() {
     }
   }
 
-  function startPolling(): void {
-    stopPolling()
-    pollAttempts = 0
+  function startSSE(id: string): void {
+    stopSSE()
 
-    pollTimer = setInterval(async () => {
-      pollAttempts++
-      try {
-        const res = await api.certificates.statusList(certId.value!)
-        const s = res.data.data?.status as typeof status.value
-        status.value = s ?? null
+    eventSource = new EventSource(`${SSE_BASE}/certificates/${id}/stream`)
 
-        if (s !== 'pending') stopPolling()
+    eventSource.addEventListener('status', (event) => {
+      console.log('SSE status:', event.data)
+      const s = event.data.trim() as typeof status.value
+      status.value = s
+    
+      if (s === 'done' || s === 'failed') stopSSE()
+    })
 
-        if (pollAttempts >= POLL_MAX_ATTEMPTS) {
-          stopPolling()
-          error.value = 'Polling timeout — coba refresh halaman.'
-        }
-      } catch (e) {
-        stopPolling()
-        error.value = (e as Error).message
-      }
-    }, POLL_INTERVAL_MS)
+    eventSource.onerror = () => {
+      error.value = 'Koneksi SSE terputus'
+      stopSSE()
+    }
   }
 
-  function stopPolling(): void {
-    if (pollTimer !== null) {
-      clearInterval(pollTimer)
-      pollTimer = null
+  function stopSSE(): void {
+    if (eventSource !== null) {
+      eventSource.close()
+      eventSource = null
     }
   }
 
@@ -90,5 +83,5 @@ export function useCertificate() {
     URL.revokeObjectURL(url)
   }
 
-  return { certId, status, loading, error, generateCertificate, stopPolling, download }
+  return { certId, status, loading, error, generateCertificate, stopSSE, download }
 }
